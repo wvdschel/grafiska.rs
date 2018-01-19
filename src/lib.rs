@@ -43,7 +43,7 @@ use std::ptr;
 #[derive(Debug, Copy, Clone)]
 pub struct Buffer {
     /// The ID of the underlying buffer resource.
-    pub id: u32,
+    id: u32,
 }
 
 /// An image resource handle.
@@ -52,14 +52,14 @@ pub struct Buffer {
 #[derive(Debug, Copy, Clone)]
 pub struct Image {
     /// The ID of the underlying image resource.
-    pub id: u32,
+    id: u32,
 }
 
 /// A shader resource handle.
 #[derive(Debug, Copy, Clone)]
 pub struct Shader {
     /// The ID of the underlying shader resource.
-    pub id: u32,
+    id: u32,
 }
 
 /// A pipeline resource handle.
@@ -68,7 +68,7 @@ pub struct Shader {
 #[derive(Debug, Copy, Clone)]
 pub struct Pipeline {
     /// The ID of the underlying pipeline resource.
-    pub id: u32,
+    id: u32,
 }
 
 /// A pass resource handle.
@@ -78,11 +78,11 @@ pub struct Pipeline {
 #[derive(Debug, Copy, Clone)]
 pub struct Pass {
     /// The ID of the underlying pass resource.
-    pub id: u32,
+    id: u32,
 }
 
-#[allow(missing_docs)]
-pub const INVALID_ID: u32 = 0;
+#[allow(dead_code, missing_docs)]
+const INVALID_ID: u32 = 0;
 #[allow(missing_docs)]
 pub const NUM_SHADER_STAGES: usize = 2;
 #[allow(missing_docs)]
