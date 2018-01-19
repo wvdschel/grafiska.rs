@@ -1,0 +1,21 @@
+[package]
+name = "grafiska"
+version = "0.0.1"
+authors = ["Bruce Mitchener <bruce.mitchener@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+description = ""
+keywords = ["graphics", "render", "Metal", "OpenGL"]
+homepage = "https://github.com/endoli/grafiska.rs"
+repository = "https://github.com/endoli/grafiska.rs"
+documentation = "https://endoli.github.io/grafiska.rs/"
+
+[features]
+d3d11 = []
+gl = []
+glcore33 = ["gl"]
+gles2 = ["gl"]
+gles3 = ["gl"]
+metal = []
+metal_macos = ["metal"]
+metal_ios = ["metal"]
