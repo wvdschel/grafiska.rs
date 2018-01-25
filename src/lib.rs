@@ -302,6 +302,116 @@ impl Default for PixelFormat {
     }
 }
 
+impl PixelFormat {
+    /// Return `true` if pixel format is a compressed format.
+    pub fn is_compressed_pixel_format(self) -> bool {
+        match self {
+            PixelFormat::DXT1
+            | PixelFormat::DXT3
+            | PixelFormat::DXT5
+            | PixelFormat::PVRTC2_RGB
+            | PixelFormat::PVRTC4_RGB
+            | PixelFormat::PVRTC2_RGBA
+            | PixelFormat::PVRTC4_RGBA
+            | PixelFormat::ETC2_RGB8
+            | PixelFormat::ETC2_SRGB8 => true,
+            _ => false,
+        }
+    }
+
+    /// Return `true` if pixel format is a valid render target color format.
+    pub fn is_valid_rendertarget_color_format(self) -> bool {
+        match self {
+            PixelFormat::RGBA8
+            | PixelFormat::R10G10B10A2
+            | PixelFormat::RGBA32F
+            | PixelFormat::RGBA16F => true,
+            _ => false,
+        }
+    }
+
+    /// Return `true` if pixel format is a valid render target color format.
+    pub fn is_valid_rendertarget_depth_format(self) -> bool {
+        match self {
+            PixelFormat::Depth | PixelFormat::DepthStencil => true,
+            _ => false,
+        }
+    }
+
+    /// Return `true` if pixel format is a depth-stencil format.
+    pub fn is_depth_stencil_format(self) -> bool {
+        self == PixelFormat::DepthStencil
+    }
+
+    /// Return the bytes per pixel for a pixel format.
+    pub fn bytesize(self) -> usize {
+        match self {
+            PixelFormat::RGBA32F => 16,
+            PixelFormat::RGBA16F => 8,
+            PixelFormat::RGBA8 | PixelFormat::R10G10B10A2 | PixelFormat::R32F => 4,
+            PixelFormat::RGB8 => 3,
+            PixelFormat::R5G5B5A1
+            | PixelFormat::R5G6B5
+            | PixelFormat::RGBA4
+            | PixelFormat::R16F => 2,
+            PixelFormat::L8 => 1,
+            _ => unreachable!(),
+        }
+    }
+
+    /// Return row pitch for an image.
+    pub fn row_pitch(self, width: usize) -> usize {
+        match self {
+            PixelFormat::DXT1 | PixelFormat::ETC2_RGB8 | PixelFormat::ETC2_SRGB8 => {
+                let pitch = ((width + 3) / 4) * 8;
+                if pitch < 8 {
+                    8
+                } else {
+                    pitch
+                }
+            }
+            PixelFormat::DXT3 | PixelFormat::DXT5 => {
+                let pitch = ((width + 3) / 4) * 16;
+                if pitch < 16 {
+                    16
+                } else {
+                    pitch
+                }
+            }
+            PixelFormat::PVRTC4_RGB | PixelFormat::PVRTC4_RGBA => {
+                let block_size = 4 * 4;
+                let bpp = 4;
+                let width_blocks = ::std::cmp::max(2, width / 4);
+                width_blocks * ((block_size * bpp) / 8)
+            }
+            PixelFormat::PVRTC2_RGB | PixelFormat::PVRTC2_RGBA => {
+                let block_size = 8 * 4;
+                let bpp = 2;
+                let width_blocks = ::std::cmp::max(2, width / 4);
+                width_blocks * ((block_size * bpp) / 8)
+            }
+            _ => width * PixelFormat::bytesize(self),
+        }
+    }
+
+    /// Return pitch of a 2D subimage / texture slice.
+    pub fn surface_pitch(self, width: usize, height: usize) -> usize {
+        let num_rows = match self {
+            PixelFormat::DXT1
+            | PixelFormat::DXT3
+            | PixelFormat::DXT5
+            | PixelFormat::ETC2_RGB8
+            | PixelFormat::ETC2_SRGB8
+            | PixelFormat::PVRTC2_RGB
+            | PixelFormat::PVRTC2_RGBA
+            | PixelFormat::PVRTC4_RGB
+            | PixelFormat::PVRTC4_RGBA => ((height + 3) / 4),
+            _ => height,
+        };
+        ::std::cmp::max(1, num_rows) * PixelFormat::row_pitch(self, width)
+    }
+}
+
 /// A common subset of 3D primitive types supported across all 3D
 /// APIs.
 ///
@@ -391,6 +501,27 @@ pub enum VertexFormat {
     UInt10N2,
 }
 
+impl VertexFormat {
+    /// Size in bytes for a vertex format.
+    pub fn bytesize(self) -> usize {
+        match self {
+            VertexFormat::Float => 4,
+            VertexFormat::Float2 => 8,
+            VertexFormat::Float3 => 12,
+            VertexFormat::Float4 => 16,
+            VertexFormat::Byte4 => 4,
+            VertexFormat::Byte4N => 4,
+            VertexFormat::UByte4 => 4,
+            VertexFormat::UByte4N => 4,
+            VertexFormat::Short2 => 4,
+            VertexFormat::Short2N => 4,
+            VertexFormat::Short4 => 8,
+            VertexFormat::Short4N => 8,
+            VertexFormat::UInt10N2 => 4,
+        }
+    }
+}
+
 /// Defines whether the input pointer of a vertex input stream is
 /// advanced 'per vertex' or 'per instance'.
 ///
@@ -424,6 +555,19 @@ pub enum UniformType {
     Float3,
     Float4,
     Mat4,
+}
+
+impl UniformType {
+    /// Return the byte size of a shader uniform.
+    pub fn bytesize(self, count: usize) -> usize {
+        match self {
+            UniformType::Float => 4 * count,
+            UniformType::Float2 => 8 * count,
+            UniformType::Float3 => 12 * count, // FIXME: std140???
+            UniformType::Float4 => 16 * count,
+            UniformType::Mat4 => 64 * count,
+        }
+    }
 }
 
 /// The face-culling mode.
