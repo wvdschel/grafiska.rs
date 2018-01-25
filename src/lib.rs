@@ -138,6 +138,36 @@ pub enum Feature {
     ImageTypeArray,
 }
 
+/// The current state of a resource in its resource pool.
+///
+/// Resources start in the INITIAL state, which means the
+/// pool slot is unoccupied and can be allocated. When a resource is
+/// created, first an id is allocated, and the resource pool slot
+/// is set to state ALLOC. After allocation, the resource is
+/// initialized, which may result in the VALID or FAILED state. The
+/// reason why allocation and initialization are separate is because
+/// some resource types (e.g. buffers and images) might be asynchronously
+/// initialized by the user application. If a resource which is not
+/// in the VALID state is attempted to be used for rendering, rendering
+/// operations will silently be dropped.
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub enum ResourceState {
+    /// The resource slot is unoccupied and can be allocated.
+    Initial,
+    /// An ID has been allocated, but the resource has not yet been initialized.
+    Alloc,
+    /// The resource has been allocated and initialized.
+    Valid,
+    /// Initializing the resource failed.
+    Failed,
+}
+
+impl Default for ResourceState {
+    fn default() -> Self {
+        ResourceState::Initial
+    }
+}
+
 /// A resource usage hint describing the update strategy of
 /// buffers and images. This is used in the `BufferDesc`
 /// and `ImageDesc` `usage` members when creating buffers
