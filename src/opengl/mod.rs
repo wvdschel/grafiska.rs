@@ -5,3 +5,6 @@
 // except according to those terms.
 
 extern crate gleam;
+
+mod translations;
+pub use self::translations::*;
