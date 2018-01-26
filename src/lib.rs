@@ -235,22 +235,12 @@ impl Default for BufferType {
 ///
 /// This is used in the `PipelineDesc` `index_type` member when creating a
 /// pipeline object.
-///
-/// The default index type is `IndexType::None`.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum IndexType {
-    /// Do not use indexed rendering.
-    None,
     /// Index data is 16 bit.
     UInt16,
     /// Index data is 32 bit.
     UInt32,
-}
-
-impl Default for IndexType {
-    fn default() -> Self {
-        IndexType::None
-    }
 }
 
 /// Indicates the basic image type (2D texture, cube map, 3D texture, or
@@ -1138,7 +1128,7 @@ pub struct PipelineDesc {
     pub vertex_layouts: [VertexLayoutDesc; MAX_SHADERSTAGE_BUFFERS],
     pub shader: Shader,
     pub primitive_type: PrimitiveType,
-    pub index_type: IndexType,
+    pub index_type: Option<IndexType>,
     pub depth_stencil: DepthStencilState,
     pub blend: BlendState,
     pub rasterizer: RasterizerState,

@@ -183,7 +183,6 @@ impl IndexType {
     /// is enabled.
     pub fn mtl_index_size(self) -> usize {
         match self {
-            IndexType::None => 0,
             IndexType::UInt16 => 2,
             IndexType::UInt32 => 4,
         }
@@ -195,7 +194,6 @@ impl IndexType {
     /// is enabled.
     pub fn mtl_index_type(self) -> MTLIndexType {
         match self {
-            IndexType::None => unreachable!(),
             IndexType::UInt16 => MTLIndexType::UInt16,
             IndexType::UInt32 => MTLIndexType::UInt32,
         }
