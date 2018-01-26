@@ -40,6 +40,9 @@ use std::os;
 #[allow(unused_imports)]
 use std::ptr;
 
+#[cfg(feature = "gl")]
+mod opengl;
+
 #[cfg(feature = "metal")]
 mod metal;
 
