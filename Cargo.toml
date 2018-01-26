@@ -19,3 +19,6 @@ gles3 = ["gl"]
 metal = []
 metal_macos = ["metal"]
 metal_ios = ["metal"]
+
+[dependencies]
+bitflags = "1.0"

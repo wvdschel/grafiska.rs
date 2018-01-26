@@ -33,6 +33,9 @@
 // For now ...
 #![allow(unused_variables)]
 
+#[macro_use]
+extern crate bitflags;
+
 use std::os;
 #[allow(unused_imports)]
 use std::ptr;
@@ -734,24 +737,38 @@ impl Default for BlendOp {
     }
 }
 
-/// Selects the color channels when writing a fragment color to the
-/// framebuffer.
-///
-/// This is used in the `PipelineDesc`'s `blend`'s `color_write_mask`
-/// member when creating a pipeline object.
-///
-/// The default color mask is `ColorMask::RGBA`, which writes all color
-/// channels.
-#[allow(missing_docs)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum ColorMask {
-    None = 0x10,
-    R = 1,
-    G = 1 << 1,
-    B = 1 << 2,
-    A = 1 << 3,
-    RGB = 0x7,
-    RGBA = 0xF,
+bitflags! {
+    /// Selects the color channels when writing a fragment color to the
+    /// framebuffer.
+    ///
+    /// This is used in the `PipelineDesc`'s `blend`'s `color_write_mask`
+    /// member when creating a pipeline object.
+    ///
+    /// The default color mask is `ColorMask::RGBA`, which writes all color
+    /// channels.
+    #[allow(missing_docs)]
+    #[repr(C)]
+    pub struct ColorMask: u32 {
+        /// None
+        const NONE = 0x10;
+        /// Red
+        const R = 1;
+        /// Green
+        const G = 1 << 1;
+        /// Blue
+        const B = 1 << 2;
+        /// Alpha
+        const A = 1 << 3;
+        /// Red, green and blue.
+        const RGB
+            = Self::R.bits |
+              Self::G.bits |
+              Self::B.bits;
+        /// Red, green, blue, alpha. All channels.
+        const RGBA
+            = Self::RGB.bits |
+              Self::A.bits;
+    }
 }
 
 impl Default for ColorMask {
