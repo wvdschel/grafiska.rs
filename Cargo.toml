@@ -16,9 +16,10 @@ gl = []
 glcore33 = ["gl"]
 gles2 = ["gl"]
 gles3 = ["gl"]
-metal = []
+metal = ["metal-rs"]
 metal_macos = ["metal"]
 metal_ios = ["metal"]
 
 [dependencies]
 bitflags = "1.0"
+metal-rs = { version = "0.6.4", optional = true }

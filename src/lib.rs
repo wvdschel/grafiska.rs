@@ -40,6 +40,9 @@ use std::os;
 #[allow(unused_imports)]
 use std::ptr;
 
+#[cfg(feature = "metal")]
+mod metal;
+
 /// A buffer resource handle.
 ///
 /// Buffers contain vertex and index data.
