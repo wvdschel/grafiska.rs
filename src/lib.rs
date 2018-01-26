@@ -119,7 +119,7 @@ pub const CUBEFACE_NUM: usize = 6;
 ///
 /// Not all features are fully supported by all of the rendering backends.
 ///
-/// Use `query_feature()` to check at run-time whether or not the feature
+/// Use [`query_feature()`] to check at run-time whether or not the feature
 /// is supported:
 ///
 /// ```no_run
@@ -128,6 +128,8 @@ pub const CUBEFACE_NUM: usize = 6;
 ///     // ...
 /// }
 /// ```
+///
+/// [`query_feature()`]: fn.query_feature.html
 #[allow(missing_docs)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Feature {
@@ -178,16 +180,16 @@ impl Default for ResourceState {
 }
 
 /// A resource usage hint describing the update strategy of
-/// buffers and images. This is used in the `BufferDesc`
-/// and `ImageDesc` `usage` members when creating buffers
+/// buffers and images. This is used in the [`BufferDesc`]
+/// and [`ImageDesc`] `usage` members when creating buffers
 /// and images.
 ///
 /// The rendering backends use this hint to prevent that the
 /// CPU needs to wait for the GPU when attempting to update
 /// a resource that might be currently accessed by the GPU.
 ///
-/// Resource content is updated with the function `update_buffer()` for
-/// buffer objects, and `update_image()` for image objects. Only
+/// Resource content is updated with the function [`update_buffer()`] for
+/// buffer objects, and [`update_image()`] for image objects. Only
 /// one update is allowed per frame and resource object. The
 /// application must update all data required for rendering (this
 /// means that the update data can be smaller than the resource size,
@@ -195,6 +197,11 @@ impl Default for ResourceState {
 /// you only need to make sure that the data that *is* used is valid.
 ///
 /// The default usage is `Usage::Immutable`.
+///
+/// [`BufferDesc`]: struct.BufferDesc.html
+/// [`ImageDesc`]: struct.ImageDesc.html
+/// [`update_buffer()`]: fn.update_buffer.html
+/// [`update_image()`]: fn.update_image.html
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Usage {
     /// The resource will never be updated with new data, instead, the
@@ -216,9 +223,11 @@ impl Default for Usage {
 
 /// Indicates whether a buffer contains vertex or index data.
 ///
-/// Used in the `BufferDesc` `type` member when creating a buffer.
+/// Used in the [`BufferDesc`] `type` member when creating a buffer.
 ///
 /// The default value is `BufferType::VertexBuffer`.
+///
+/// [`BufferDesc`]: struct.BufferDesc.html
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum BufferType {
     /// Vertex data.
@@ -236,8 +245,10 @@ impl Default for BufferType {
 /// Indicates whether indexed rendering (fetching vertex-indices from an
 /// index buffer) is used, and if yes, the index data type (16- or 32-bits).
 ///
-/// This is used in the `PipelineDesc` `index_type` member when creating a
+/// This is used in the [`PipelineDesc`] `index_type` member when creating a
 /// pipeline object.
+///
+/// [`PipelineDesc`]: struct.PipelineDesc.html
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum IndexType {
     /// Index data is 16 bit.
@@ -251,10 +262,12 @@ pub enum IndexType {
 ///
 /// 3D and array textures are not supported on the GLES2 / WebGL backend.
 ///
-/// The image type is used in the `ImageDesc` `type` member when creating
+/// The image type is used in the [`ImageDesc`] `type` member when creating
 /// an image.
 ///
 /// The default image type when creating an image is `ImageType::Texture2D`.
+///
+/// [`ImageDesc`]: struct.ImageDesc.html
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum ImageType {
     /// A 2D texture.
@@ -293,9 +306,11 @@ pub enum ShaderStage {
 /// A common subset of useful and widely supported pixel formats.
 ///
 /// The pixel format enum is mainly used when creating an image object
-/// in the `ImageDesc` `pixel_format` member.
+/// in the [`ImageDesc`] `pixel_format` member.
 ///
 /// The default pixel format when creating an image is `PixelFormat::RGBA8`.
+///
+/// [`ImageDesc`]: struct.ImageDesc.html
 #[allow(missing_docs)]
 #[allow(non_camel_case_types)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -444,10 +459,12 @@ impl PixelFormat {
 /// A common subset of 3D primitive types supported across all 3D
 /// APIs.
 ///
-/// This is used in the `PipelineDesc` `primitive_type` member when
+/// This is used in the [`PipelineDesc`] `primitive_type` member when
 /// creating a pipeline object.
 ///
 /// The default primitive type is `PrimitiveType::Triangles`.
+///
+/// [`PipelineDesc`]: struct.PipelineDesc.html
 #[allow(missing_docs)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum PrimitiveType {
@@ -466,10 +483,12 @@ impl Default for PrimitiveType {
 
 /// The filter mode when sampling a texture image.
 ///
-/// This is used in the `ImageDesc` `min_filter` and `mag_filter`
+/// This is used in the [`ImageDesc`] `min_filter` and `mag_filter`
 /// members when creating an image object.
 ///
 /// The default filter mode is `Filter::Nearest`.
+///
+/// [`ImageDesc`]: struct.ImageDesc.html
 #[allow(missing_docs)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Filter {
@@ -490,10 +509,12 @@ impl Default for Filter {
 /// The texture coordinates wrapping mode when sampling a texture
 /// image.
 ///
-/// This is used in the `ImageDesc` `wrap_u`, `wrap_v`, and `wrap_w`
+/// This is used in the [`ImageDesc`] `wrap_u`, `wrap_v`, and `wrap_w`
 /// members when creating an image.
 ///
 /// The default wrap mode is `Wrap::Repeat`.
+///
+/// [`ImageDesc`]: struct.ImageDesc.html
 #[allow(missing_docs)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Wrap {
@@ -601,10 +622,12 @@ impl UniformType {
 
 /// The face-culling mode.
 ///
-/// This is used in the `PipelineDesc` `rasterizer`'s
+/// This is used in the [`PipelineDesc`] `rasterizer`'s
 /// `cull_mode` member when creating a pipeline object.
 ///
 /// The default cull mode is `CullMode::None`.
+///
+/// [`PipelineDesc`]: struct.PipelineDesc.html
 #[allow(missing_docs)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum CullMode {
@@ -622,10 +645,12 @@ impl Default for CullMode {
 /// The vertex-winding rule that determines a front-facing
 /// primitive.
 ///
-/// This is used in the `PipelineDesc` `rasterizer`'s
+/// This is used in the [`PipelineDesc`] `rasterizer`'s
 /// `face_winding` member when creating a pipeline object.
 ///
 /// The default winding is `FaceWinding::CW` (clockwise).
+///
+/// [`PipelineDesc`]: struct.PipelineDesc.html
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum FaceWinding {
     /// Counter-clockwise.
@@ -737,11 +762,13 @@ bitflags! {
     /// Selects the color channels when writing a fragment color to the
     /// framebuffer.
     ///
-    /// This is used in the `PipelineDesc`'s `blend`'s `color_write_mask`
+    /// This is used in the [`PipelineDesc`]'s `blend`'s `color_write_mask`
     /// member when creating a pipeline object.
     ///
     /// The default color mask is `ColorMask::RGBA`, which writes all color
     /// channels.
+    ///
+    /// [`PipelineDesc`]: struct.PipelineDesc.html
     #[allow(missing_docs)]
     #[repr(C)]
     pub struct ColorMask: u32 {
@@ -806,10 +833,13 @@ pub struct StencilAttachmentAction {
 }
 
 /// The actions to be performed at the start of a rendering pass
-/// in the functions `begin_pass()` and `begin_default_pass()`.
+/// in the functions [`begin_pass()`] and [`begin_default_pass()`].
 ///
 /// A separate action and clear values can be defined for each
 /// color attachment and for the depth-stencil attachment.
+///
+/// [`begin_pass()`]: fn.begin_pass.html
+/// [`begin_default_pass()`]: fn.begin_default_pass.html
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct PassAction {
@@ -957,10 +987,12 @@ pub struct SubimageContent<'c> {
     pub content: &'c [u8],
 }
 
-/// The content of an image by way of a 2D array of `SubimageContent` structs.
+/// The content of an image by way of a 2D array of [`SubimageContent`] structs.
 ///
 /// The first array dimension is the cubemap face and the second is the mipmap
 /// level.
+///
+/// [`SubimageContent`]: struct.SubimageContent.html
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct ImageContent<'c> {
@@ -1137,10 +1169,12 @@ pub struct PipelineDesc {
     pub rasterizer: RasterizerState,
 }
 
-/// An attachment for the `PassDesc`.
+/// An attachment for the [`PassDesc`].
 ///
 /// An attachment consists of an image and two additional
 /// indices describing which subimage the pass will render.
+///
+/// [`PassDesc`]: struct.PassDesc.html
 #[derive(Debug)]
 pub struct AttachmentDesc {
     /// The image to render.
@@ -1152,7 +1186,7 @@ pub struct AttachmentDesc {
     pub index: usize,
 }
 
-/// Creation parameters for a `Pass` object.
+/// Creation parameters for a [`Pass`] object.
 ///
 /// This is used as an argument to the `make_pass()` function.
 ///
@@ -1162,6 +1196,8 @@ pub struct AttachmentDesc {
 /// * All images must be the same size.
 /// * All images must have the same sample count.
 /// * All color attachment images must have the same pixel format.
+///
+/// [`Pass`]: struct.Pass.html
 #[derive(Debug)]
 pub struct PassDesc {
     /// Up to `MAX_COLOR_ATTACHMENTS` color attachments.
@@ -1294,10 +1330,12 @@ pub fn apply_scissor_rect(x: u32, y: u32, width: u32, height: u32, origin_top_le
 
 /// Update the resource bindings for the next draw call.
 ///
-/// Fill a `DrawState` struct with the resource bindings for the next draw
+/// Fill a [`DrawState`] struct with the resource bindings for the next draw
 /// call (one pipeline object, 1..N vertex buffers, 0 or 1 index buffer,
 /// 0..N image objects to use as textures each on the vertex and fragment
 /// shader stages.
+///
+/// [`DrawState`]: struct.DrawState.html
 pub fn apply_draw_state(ds: DrawState) {
     unimplemented!();
 }
@@ -1335,35 +1373,45 @@ pub fn commit() {
 
 /// Allocate, without initialization, a `Buffer` resource handle.
 ///
-/// The buffer must subsequently be initialized with `init_buffer()`.
+/// The buffer must subsequently be initialized with [`init_buffer()`].
+///
+/// [`init_buffer()`]: fn.init_buffer.html
 pub fn alloc_buffer() -> Buffer {
     unimplemented!();
 }
 
 /// Allocate, without initialization, an `Image` resource handle.
 ///
-/// The image must subsequently be initialized with `init_image()`.
+/// The image must subsequently be initialized with [`init_image()`].
+///
+/// [`init_image()`]: fn.init_image.html
 pub fn alloc_image() -> Image {
     unimplemented!();
 }
 
 /// Allocate, without initialization, a `Shader` resource handle.
 ///
-/// The shader must subsequently be initialized with `init_shader()`.
+/// The shader must subsequently be initialized with [`init_shader()`].
+///
+/// [`init_shader()`]: fn.init_shader.html
 pub fn alloc_shader() -> Shader {
     unimplemented!();
 }
 
 /// Allocate, without initialization, a `Pipeline` resource handle.
 ///
-/// The pipeline must subsequently be initialized with `init_pipeline()`.
+/// The pipeline must subsequently be initialized with [`init_pipeline()`].
+///
+/// [`init_pipeline()`]: fn.init_pipeline.html
 pub fn alloc_pipeline() -> Pipeline {
     unimplemented!();
 }
 
 /// Allocate, without initialization, a `Pass` resource handle.
 ///
-/// The pass must subsequently be initialized with `init_pass()`.
+/// The pass must subsequently be initialized with [`init_pass()`].
+///
+/// [`init_pass()`]: fn.init_pass.html
 pub fn alloc_pass() -> Pass {
     unimplemented!();
 }
