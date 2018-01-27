@@ -10,8 +10,7 @@ use super::super::*;
 impl Action {
     /// Convert this action to the Metal equivalent `MTLLoadAction`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_load_action(self) -> MTLLoadAction {
         match self {
             Action::Clear => MTLLoadAction::Clear,
@@ -24,8 +23,7 @@ impl Action {
 impl BlendFactor {
     /// Convert this blend factor to the Metal equivalent `MTLBlendFactor`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_blend_factor(self) -> MTLBlendFactor {
         match self {
             BlendFactor::Zero => MTLBlendFactor::Zero,
@@ -50,8 +48,7 @@ impl BlendFactor {
 impl BlendOp {
     /// Convert this blend operation to the Metal equivalent `MTLBlendOperation`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_blend_op(self) -> MTLBlendOperation {
         match self {
             BlendOp::Add => MTLBlendOperation::Add,
@@ -64,8 +61,7 @@ impl BlendOp {
 impl ColorMask {
     /// Convert this color mask to the Metal equivalent `MTLColorWriteMask`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_color_write_mask(self) -> MTLColorWriteMask {
         let mut m = MTLColorWriteMask::MTLColorWriteMaskNone;
         if self.contains(ColorMask::R) {
@@ -87,8 +83,7 @@ impl ColorMask {
 impl CompareFunc {
     /// Convert this comparison function to the Metal equivalent `MTLCompareFunction`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_compare_func(self) -> MTLCompareFunction {
         match self {
             CompareFunc::Never => MTLCompareFunction::Never,
@@ -106,8 +101,7 @@ impl CompareFunc {
 impl CullMode {
     /// Convert this cull mode to the Metal equivalent `MTLCullMode`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_cull_mode(self) -> MTLCullMode {
         match self {
             CullMode::None => MTLCullMode::None,
@@ -120,8 +114,7 @@ impl CullMode {
 impl FaceWinding {
     /// Convert this face winding to the Metal equivalent `MTLWinding`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_winding(self) -> MTLWinding {
         match self {
             FaceWinding::CW => MTLWinding::Clockwise,
@@ -133,8 +126,7 @@ impl FaceWinding {
 impl Filter {
     /// Convert this filter to the Metal equivalent `MTLSamplerMinMagFilter`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_minmag_filter(self) -> MTLSamplerMinMagFilter {
         match self {
             Filter::Nearest | Filter::NearestMipmapNearest | Filter::NearestMipmapLinear => {
@@ -148,8 +140,7 @@ impl Filter {
 
     /// Convert this filter to the Metal equivalent `MTLSamplerMinFilter`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_mip_filter(self) -> MTLSamplerMipFilter {
         match self {
             Filter::Nearest | Filter::Linear => MTLSamplerMipFilter::NotMipmapped,
@@ -164,8 +155,7 @@ impl Filter {
 impl ImageType {
     /// Convert this image type to the Metal equivalent `MTLTextureType`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_texture_type(self) -> MTLTextureType {
         match self {
             ImageType::Texture2D => MTLTextureType::D2,
@@ -179,8 +169,7 @@ impl ImageType {
 impl IndexType {
     /// Get the size in bytes of an element of this index type.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_index_size(self) -> usize {
         match self {
             IndexType::UInt16 => 2,
@@ -190,8 +179,7 @@ impl IndexType {
 
     /// Convert this index type to the Metal equivalent `MTLIndexType`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_index_type(self) -> MTLIndexType {
         match self {
             IndexType::UInt16 => MTLIndexType::UInt16,
@@ -203,8 +191,7 @@ impl IndexType {
 impl PixelFormat {
     /// Return `true` if this pixel format represents PVR texture compression.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_is_pvrtc(self) -> bool {
         match self {
             PixelFormat::PVRTC2_RGB
@@ -218,8 +205,7 @@ impl PixelFormat {
     /// Convert this pixel format to the Metal equivalent `MTLPixelFormat`.
     /// for a texture format.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_texture_format(self) -> MTLPixelFormat {
         match self {
             PixelFormat::RGBA8 => MTLPixelFormat::RGBA8Unorm,
@@ -229,23 +215,23 @@ impl PixelFormat {
             PixelFormat::R32F => MTLPixelFormat::R32Float,
             PixelFormat::R16F => MTLPixelFormat::R16Float,
             PixelFormat::L8 => MTLPixelFormat::R8Unorm,
-            #[cfg(feature = "metal_macos")]
+            #[cfg(target_os = "macos")]
             PixelFormat::DXT1 => MTLPixelFormat::BC1_RGBA,
-            #[cfg(feature = "metal_macos")]
+            #[cfg(target_os = "macos")]
             PixelFormat::DXT3 => MTLPixelFormat::BC2_RGBA,
-            #[cfg(feature = "metal_macos")]
+            #[cfg(target_os = "macos")]
             PixelFormat::DXT5 => MTLPixelFormat::BC3_RGBA,
-            #[cfg(feature = "metal_ios")]
+            #[cfg(target_os = "ios")]
             PixelFormat::PVRTC2_RGB => MTLPixelFormat::PVRTC_RGB_2BPP,
-            #[cfg(feature = "metal_ios")]
+            #[cfg(target_os = "ios")]
             PixelFormat::PVRTC4_RGB => MTLPixelFormat::PVRTC_RGB_4BPP,
-            #[cfg(feature = "metal_ios")]
+            #[cfg(target_os = "ios")]
             PixelFormat::PVRTC2_RGBA => MTLPixelFormat::PVRTC_RGBA_2BPP,
-            #[cfg(feature = "metal_ios")]
+            #[cfg(target_os = "ios")]
             PixelFormat::PVRTC4_RGBA => MTLPixelFormat::PVRTC_RGBA_4BPP,
-            #[cfg(feature = "metal_ios")]
+            #[cfg(target_os = "ios")]
             PixelFormat::ETC2_RGB8 => MTLPixelFormat::ETC2_RGB8,
-            #[cfg(feature = "metal_ios")]
+            #[cfg(target_os = "ios")]
             PixelFormat::ETC2_SRGB8 => MTLPixelFormat::ETC2_RGB8_sRGB,
             _ => MTLPixelFormat::Invalid,
         }
@@ -254,8 +240,7 @@ impl PixelFormat {
     /// Convert this pixel format to the Metal equivalent `MTLPixelFormat`
     /// for the render target color format.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_rendertarget_color_format(self) -> MTLPixelFormat {
         match self {
             PixelFormat::RGBA8 => MTLPixelFormat::BGRA8Unorm, // Not a bug!
@@ -269,8 +254,7 @@ impl PixelFormat {
     /// Convert this pixel format to the Metal equivalent `MTLPixelFormat`
     /// for the render target depth format.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_rendertarget_depth_format(self) -> MTLPixelFormat {
         match self {
             PixelFormat::Depth => MTLPixelFormat::Depth32Float,
@@ -285,8 +269,7 @@ impl PixelFormat {
     /// Convert this pixel format to the Metal equivalent `MTLPixelFormat`
     /// for the render target stencil format.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_rendertarget_stencil_format(self) -> MTLPixelFormat {
         match self {
             PixelFormat::DepthStencil => MTLPixelFormat::Depth32Float_Stencil8,
@@ -298,8 +281,7 @@ impl PixelFormat {
 impl PrimitiveType {
     /// Convert this primitive type to the Metal equivalent `MTLPrimitiveType`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_primitive_type(self) -> MTLPrimitiveType {
         match self {
             PrimitiveType::Points => MTLPrimitiveType::Point,
@@ -314,13 +296,12 @@ impl PrimitiveType {
 impl Usage {
     /// Convert this usage to the Metal equivalent `MTLResourceOptions`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_buffer_resource_options(self) -> MTLResourceOptions {
         match self {
             Usage::Immutable => MTLResourceOptions::StorageModeShared,
             Usage::Dynamic | Usage::Stream => {
-                if cfg!(feature = "metal_macos") {
+                if cfg!(target_os = "macos") {
                     MTLResourceOptions::CPUCacheModeWriteCombined
                         | MTLResourceOptions::StorageModeManaged
                 } else {
@@ -334,8 +315,7 @@ impl Usage {
 impl VertexFormat {
     /// Convert this vertex format to the Metal equivalent `MTLVertexFormat`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_vertex_format(self) -> MTLVertexFormat {
         match self {
             VertexFormat::Float => MTLVertexFormat::Float,
@@ -358,8 +338,7 @@ impl VertexFormat {
 impl VertexStep {
     /// Convert this vertex step function to the Metal equivalent `MTLVertexStepFunction`.
     ///
-    /// This is only present when the `metal_macos` or `metal_ios` feature
-    /// is enabled.
+    /// This is only present when the `metal` feature is enabled.
     pub fn mtl_step_function(self) -> MTLVertexStepFunction {
         match self {
             VertexStep::PerVertex => MTLVertexStepFunction::PerVertex,
