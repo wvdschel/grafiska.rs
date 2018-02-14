@@ -1105,6 +1105,17 @@ pub struct StencilState {
     pub compare_func: CompareFunc,
 }
 
+impl Default for StencilState {
+    fn default() -> Self {
+        StencilState {
+            fail_op: StencilOp::default(),
+            depth_fail_op: StencilOp::default(),
+            pass_op: StencilOp::default(),
+            compare_func: CompareFunc::default(),
+        }
+    }
+}
+
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct DepthStencilState {
@@ -1116,6 +1127,21 @@ pub struct DepthStencilState {
     pub stencil_read_mask: u8,
     pub stencil_write_mask: ColorMask,
     pub stencil_ref: u8,
+}
+
+impl Default for DepthStencilState {
+    fn default() -> Self {
+        DepthStencilState {
+            stencil_front: StencilState::default(),
+            stencil_back: StencilState::default(),
+            depth_compare_func: CompareFunc::default(),
+            depth_write_enabled: false,
+            stencil_enabled: false,
+            stencil_read_mask: 0,
+            stencil_write_mask: ColorMask::default(),
+            stencil_ref: 0,
+        }
+    }
 }
 
 #[allow(missing_docs)]
@@ -1164,6 +1190,20 @@ pub struct RasterizerState {
     pub depth_bias: f32,
     pub depth_bias_slope_scale: f32,
     pub depth_bias_clamp: f32,
+}
+
+impl Default for RasterizerState {
+    fn default() -> Self {
+        RasterizerState {
+            alpha_to_coverage_enabled: false,
+            cull_mode: CullMode::default(),
+            face_winding: FaceWinding::default(),
+            sample_count: 0,
+            depth_bias: 0f32,
+            depth_bias_slope_scale: 0f32,
+            depth_bias_clamp: 0f32,
+        }
+    }
 }
 
 #[allow(missing_docs)]
