@@ -31,12 +31,13 @@
 #![deny(trivial_numeric_casts, unsafe_code, unstable_features, unused_import_braces,
         unused_qualifications)]
 // For now ...
-#![allow(unused_variables)]
+#![allow(unused_variables, dead_code)]
 
 #[macro_use]
 extern crate bitflags;
 
 use std::os;
+
 #[allow(unused_imports)]
 use std::ptr;
 
@@ -45,6 +46,14 @@ mod opengl;
 
 #[cfg(feature = "metal")]
 mod metal;
+
+#[cfg(feature = "gl")]
+use opengl as backend;
+
+#[cfg(feature = "metal")]
+use metal as backend;
+
+mod pool;
 
 /// A buffer resource handle.
 ///
