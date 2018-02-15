@@ -32,17 +32,8 @@ impl<T: Sized> Pool<T> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Slot {
     pub id: u32,
     pub state: ResourceState,
-}
-
-impl Default for Slot {
-    fn default() -> Self {
-        Slot {
-            id: 0,
-            state: ResourceState::default(),
-        }
-    }
 }
