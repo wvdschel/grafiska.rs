@@ -617,6 +617,12 @@ pub enum UniformType {
     Mat4,
 }
 
+impl Default for UniformType {
+    fn default() -> Self {
+        UniformType::Float
+    }
+}
+
 impl UniformType {
     /// Return the byte size of a shader uniform.
     pub fn bytesize(self, count: usize) -> usize {
@@ -1284,7 +1290,7 @@ impl Context {
             frame_index: 1,
             current_pass: None,
             current_pipeline: None,
-            backend: Default::default(),
+            backend: backend::Backend::default(),
         }
     }
 

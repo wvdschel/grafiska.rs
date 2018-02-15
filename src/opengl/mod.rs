@@ -7,6 +7,8 @@
 extern crate gleam;
 
 mod translations;
+mod backend;
+pub use self::backend::Backend;
 pub use self::translations::*;
 
 use opengl::gleam::gl::types::{GLint, GLuint, GLenum};
@@ -100,22 +102,12 @@ impl Default for Image {
     }
 }
 
+#[derive(Default)]
 struct Uniform {
     gl_loc: GLint,
     uniform_type: ::UniformType,
     count: u8,
     offset: u16,
-}
-
-impl Default for Uniform {
-    fn default() -> Self {
-        Uniform {
-            gl_loc: 0,
-            uniform_type: ::UniformType::Float,
-            count: 0,
-            offset: 0,
-        }
-    }
 }
 
 struct UniformBlock {
