@@ -133,7 +133,8 @@ pub const CUBEFACE_NUM: usize = 6;
 ///
 /// ```no_run
 /// # use grafiska::*;
-/// if query_feature(Feature::Instancing) {
+/// let grfx = State::new(Config::default());
+/// if grfx.query_feature(Feature::Instancing) {
 ///     // ...
 /// }
 /// ```
@@ -1256,7 +1257,7 @@ pub struct PassDesc {
 }
 
 /// Internal state of a grafiska context.
-struct State {
+pub struct State {
     buffer_pool: pool::Pool<backend::Buffer>,
     image_pool: pool::Pool<backend::Image>,
     shader_pool: pool::Pool<backend::Shader>,
