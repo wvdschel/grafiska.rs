@@ -32,6 +32,7 @@ impl<T: Sized> Pool<T> {
     }
 }
 
+#[derive(Debug)]
 pub struct Slot {
     pub id: u32,
     pub state: ResourceState,
