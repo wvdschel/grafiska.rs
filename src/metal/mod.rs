@@ -7,6 +7,9 @@
 extern crate metal_rs as metal_sys;
 use self::metal_sys::*;
 
+mod backend;
+pub use self::backend::Backend;
+
 mod translations;
 pub use self::translations::*;
 

@@ -1266,6 +1266,7 @@ pub struct Context {
     frame_index: u32,
     current_pass: Option<Pass>,
     current_pipeline: Option<Pipeline>,
+    backend: backend::Backend,
 }
 
 impl Context {
@@ -1283,6 +1284,7 @@ impl Context {
             frame_index: 1,
             current_pass: None,
             current_pipeline: None,
+            backend: Default::default(),
         }
     }
 
@@ -1293,13 +1295,13 @@ impl Context {
 
     /// Test to see if a feature is supported by the rendering backend.
     pub fn query_feature(&self, feature: Feature) -> bool {
-        unimplemented!();
+        self.backend.query_feature(feature)
     }
 
     /// If you call directly into the underlying 3D API, this must be called
     /// prior to using Grafiska functions again.
     pub fn reset_state_cache(&mut self) {
-        unimplemented!();
+        self.backend.reset_state_cache();
     }
 
     /// Create a `Buffer` resource object.
