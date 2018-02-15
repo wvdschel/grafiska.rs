@@ -212,7 +212,7 @@ impl Default for Pipeline {
         Pipeline {
             slot: ::pool::Slot::default(),
             shader: Shader::default(), // TODO why was this a pointer?
-            shader_id: ::Shader { id: 0 },
+            shader_id: ::Shader::default(),
             primitive_type: ::PrimitiveType::default(),
             index_type: ::IndexType::UInt16,
             vertex_layout_valid: Vec::with_capacity(::MAX_SHADERSTAGE_BUFFERS),
