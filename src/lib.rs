@@ -1267,13 +1267,12 @@ struct State {
     current_pipeline: Option<Pipeline>,
 }
 
-
 impl State {
     /// Initialize the Grafiska library.
     ///
     /// This must be performed after creating a window and a 3D API
     /// context/device.
-    pub fn new(desc: Config) -> Self{
+    pub fn new(desc: Config) -> Self {
         State {
             buffer_pool: pool::Pool::<backend::Buffer>::new(desc.buffer_pool_size),
             image_pool: pool::Pool::<backend::Image>::new(desc.image_pool_size),
@@ -1292,63 +1291,63 @@ impl State {
     }
 
     /// Test to see if a feature is supported by the rendering backend.
-    pub fn query_feature(feature: Feature) -> bool {
+    pub fn query_feature(&self, feature: Feature) -> bool {
         unimplemented!();
     }
 
     /// If you call directly into the underlying 3D API, this must be called
     /// prior to using Grafiska functions again.
-    pub fn reset_state_cache() {
+    pub fn reset_state_cache(&mut self) {
         unimplemented!();
     }
 
     /// Create a `Buffer` resource object.
-    pub fn make_buffer(desc: BufferDesc) -> Buffer {
+    pub fn make_buffer(&mut self, desc: BufferDesc) -> Buffer {
         unimplemented!();
     }
 
     /// Create an `Image` resource object.
-    pub fn make_image(desc: ImageDesc) -> Image {
+    pub fn make_image(&mut self, desc: ImageDesc) -> Image {
         unimplemented!();
     }
 
     /// Create a `Shader` resource object.
-    pub fn make_shader(desc: ShaderDesc) -> Shader {
+    pub fn make_shader(&mut self, desc: ShaderDesc) -> Shader {
         unimplemented!();
     }
 
     /// Create a `Pipeline` resource object.
-    pub fn make_pipeline(desc: PipelineDesc) -> Pipeline {
+    pub fn make_pipeline(&mut self, desc: PipelineDesc) -> Pipeline {
         unimplemented!();
     }
 
     /// Create a `Pass` resource object.
-    pub fn make_pass(desc: PassDesc) -> Pass {
+    pub fn make_pass(&mut self, desc: PassDesc) -> Pass {
         unimplemented!();
     }
 
     /// Destroy a `Buffer` resource object.
-    pub fn destroy_buffer(buf: Buffer) {
+    pub fn destroy_buffer(&mut self, buf: Buffer) {
         unimplemented!();
     }
 
     /// Destroy an `Image` resource object.
-    pub fn destroy_image(img: Image) {
+    pub fn destroy_image(&mut self, img: Image) {
         unimplemented!();
     }
 
     /// Destroy a `Shader` resource object.
-    pub fn destroy_shader(shd: Shader) {
+    pub fn destroy_shader(&mut self, shd: Shader) {
         unimplemented!();
     }
 
     /// Destroy a `Pipeline` resource object.
-    pub fn destroy_pipeline(pip: Pipeline) {
+    pub fn destroy_pipeline(&mut self, pip: Pipeline) {
         unimplemented!();
     }
 
     /// Destroy a `Pass` resource object.
-    pub fn destroy_pass(pass: Pass) {
+    pub fn destroy_pass(&mut self, pass: Pass) {
         unimplemented!();
     }
 
@@ -1356,7 +1355,7 @@ impl State {
     ///
     /// The resource must have been created with `USAGE_DYNAMIC` or
     /// `USAGE_STREAM`.
-    pub fn update_buffer(buf: Buffer, data_ptr: *const os::raw::c_void, data_size: u32) {
+    pub fn update_buffer(&mut self, buf: Buffer, data_ptr: *const os::raw::c_void, data_size: u32) {
         unimplemented!();
     }
 
@@ -1364,17 +1363,17 @@ impl State {
     ///
     /// The resource must have been created with `USAGE_DYNAMIC` or
     /// `USAGE_STREAM`.
-    pub fn update_image(img: Image, data: ImageContent) {
+    pub fn update_image(&mut self, img: Image, data: ImageContent) {
         unimplemented!();
     }
 
     /// Start rendering to the default framebuffer.
-    pub fn begin_default_pass(pass_action: &PassAction, width: u32, height: u32) {
+    pub fn begin_default_pass(&mut self, pass_action: &PassAction, width: u32, height: u32) {
         unimplemented!();
     }
 
     /// Start rendering to an offscreen framebuffer.
-    pub fn begin_pass(pass: Pass, pass_action: &PassAction) {
+    pub fn begin_pass(&mut self, pass: Pass, pass_action: &PassAction) {
         unimplemented!();
     }
 
@@ -1384,14 +1383,28 @@ impl State {
     ///
     /// Starting a render pass will reset the viewport to the size of the
     /// framebuffer used in the new pass.
-    pub fn apply_viewport(x: u32, y: u32, width: u32, height: u32, origin_top_left: bool) {
+    pub fn apply_viewport(
+        &mut self,
+        x: u32,
+        y: u32,
+        width: u32,
+        height: u32,
+        origin_top_left: bool,
+    ) {
         unimplemented!();
     }
 
     /// Set a new scissor rectangle.
     ///
     /// This must be called from within a rendering pass.
-    pub fn apply_scissor_rect(x: u32, y: u32, width: u32, height: u32, origin_top_left: bool) {
+    pub fn apply_scissor_rect(
+        &mut self,
+        x: u32,
+        y: u32,
+        width: u32,
+        height: u32,
+        origin_top_left: bool,
+    ) {
         unimplemented!();
     }
 
@@ -1403,12 +1416,13 @@ impl State {
     /// shader stages.
     ///
     /// [`DrawState`]: struct.DrawState.html
-    pub fn apply_draw_state(ds: DrawState) {
+    pub fn apply_draw_state(&mut self, ds: DrawState) {
         unimplemented!();
     }
 
     /// Update shader uniform data.
     pub fn apply_uniform_block(
+        &mut self,
         stage: ShaderStage,
         ub_index: u32,
         data: *const os::raw::c_void,
@@ -1421,7 +1435,7 @@ impl State {
     ///
     /// This uses the resource bindings that were supplied to `apply_draw_state()`
     /// as well as uniform blocks supplied via `apply_uniform_block()`.
-    pub fn draw(base_element: u32, num_elements: u32, num_instances: u32) {
+    pub fn draw(&mut self, base_element: u32, num_elements: u32, num_instances: u32) {
         unimplemented!();
     }
 
@@ -1429,12 +1443,12 @@ impl State {
     ///
     /// If the render target is an MSAA render target, then an MSAA resolve will
     /// occur here.
-    pub fn end_pass() {
+    pub fn end_pass(&mut self) {
         unimplemented!();
     }
 
     /// Finish rendering the current frame.
-    pub fn commit() {
+    pub fn commit(&mut self) {
         unimplemented!();
     }
 
@@ -1443,7 +1457,7 @@ impl State {
     /// The buffer must subsequently be initialized with [`init_buffer()`].
     ///
     /// [`init_buffer()`]: fn.init_buffer.html
-    pub fn alloc_buffer() -> Buffer {
+    pub fn alloc_buffer(&mut self) -> Buffer {
         unimplemented!();
     }
 
@@ -1452,7 +1466,7 @@ impl State {
     /// The image must subsequently be initialized with [`init_image()`].
     ///
     /// [`init_image()`]: fn.init_image.html
-    pub fn alloc_image() -> Image {
+    pub fn alloc_image(&mut self) -> Image {
         unimplemented!();
     }
 
@@ -1461,7 +1475,7 @@ impl State {
     /// The shader must subsequently be initialized with [`init_shader()`].
     ///
     /// [`init_shader()`]: fn.init_shader.html
-    pub fn alloc_shader() -> Shader {
+    pub fn alloc_shader(&mut self) -> Shader {
         unimplemented!();
     }
 
@@ -1470,7 +1484,7 @@ impl State {
     /// The pipeline must subsequently be initialized with [`init_pipeline()`].
     ///
     /// [`init_pipeline()`]: fn.init_pipeline.html
-    pub fn alloc_pipeline() -> Pipeline {
+    pub fn alloc_pipeline(&mut self) -> Pipeline {
         unimplemented!();
     }
 
@@ -1479,42 +1493,48 @@ impl State {
     /// The pass must subsequently be initialized with [`init_pass()`].
     ///
     /// [`init_pass()`]: fn.init_pass.html
-    pub fn alloc_pass() -> Pass {
+    pub fn alloc_pass(&mut self) -> Pass {
         unimplemented!();
     }
 
     /// Initialize an allocated `Buffer` resource handle.
-    pub fn init_buffer(buf_id: Buffer, desc: BufferDesc) {
+    pub fn init_buffer(&mut self, buf_id: Buffer, desc: BufferDesc) {
         unimplemented!();
     }
 
     /// Initialize an allocated `Image` resource handle.
-    pub fn init_image(img_id: Image, desc: ImageDesc) {
+    pub fn init_image(&mut self, img_id: Image, desc: ImageDesc) {
         unimplemented!();
     }
 
     /// Initialize an allocated `Shader` resource handle.
-    pub fn init_shader(shd_id: Shader, desc: ShaderDesc) {
+    pub fn init_shader(&mut self, shd_id: Shader, desc: ShaderDesc) {
         unimplemented!();
     }
 
     /// Initialize an allocated `Pipeline` resource handle.
-    pub fn init_pipeline(pip_id: Pipeline, desc: PipelineDesc) {
+    pub fn init_pipeline(&mut self, pip_id: Pipeline, desc: PipelineDesc) {
         unimplemented!();
     }
 
     /// Initialize an allocated `Pass` resource handle.
-    pub fn init_pass(pass_id: Pass, desc: PassDesc) {
+    pub fn init_pass(&mut self, pass_id: Pass, desc: PassDesc) {
         unimplemented!();
     }
 
     /// Helper function for creating a `VertexAttrDesc` with a name.
-    pub fn named_attr(name: &'static str, offset: u32, format: VertexFormat) -> VertexAttrDesc {
+    pub fn named_attr(
+        &mut self,
+        name: &'static str,
+        offset: u32,
+        format: VertexFormat,
+    ) -> VertexAttrDesc {
         unimplemented!();
     }
 
     /// Helper function for creating a `VertexAttrDesc` using a semantic name and index.
     pub fn sem_attr(
+        &mut self,
         sem_name: &'static str,
         sem_index: u32,
         offset: u32,
@@ -1525,6 +1545,7 @@ impl State {
 
     /// Helper function for creating a `ShaderUniformDesc`.
     pub fn named_uniform(
+        &mut self,
         name: &'static str,
         uniform_type: UniformType,
         array_count: u32,
@@ -1533,7 +1554,7 @@ impl State {
     }
 
     /// Helper function for creating a `ShaderImageDesc`.
-    pub fn named_image(name: &'static str, image_type: ImageType) -> ShaderImageDesc {
+    pub fn named_image(&mut self, name: &'static str, image_type: ImageType) -> ShaderImageDesc {
         unimplemented!();
     }
 }
