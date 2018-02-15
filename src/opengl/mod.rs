@@ -228,24 +228,13 @@ impl Default for Pipeline {
     }
 }
 
+#[derive(Default)]
 pub struct Attachment {
     image: Image, // TODO why was this a pointer
     image_id: ::Image,
     mip_level: usize, // TODO was an int, does this need to be signed?
     slice: usize, // TODO was an int, does this need to be signed?
     gl_msaa_resolve_buffer: GLuint,
-}
-
-impl Default for Attachment {
-    fn default() -> Self {
-        Attachment {
-            image: Image::default(),
-            image_id: ::Image { id: 0 },
-            mip_level: 0,
-            slice: 0,
-            gl_msaa_resolve_buffer: 0,
-        }
-    }
 }
 
 pub struct Pass {
