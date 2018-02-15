@@ -58,7 +58,7 @@ mod pool;
 /// A buffer resource handle.
 ///
 /// Buffers contain vertex and index data.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Buffer {
     /// The ID of the underlying buffer resource.
     id: u32,
@@ -67,14 +67,14 @@ pub struct Buffer {
 /// An image resource handle.
 ///
 /// Images represent textures and render targets.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Image {
     /// The ID of the underlying image resource.
     id: u32,
 }
 
 /// A shader resource handle.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Shader {
     /// The ID of the underlying shader resource.
     id: u32,
@@ -83,7 +83,7 @@ pub struct Shader {
 /// A pipeline resource handle.
 ///
 /// Pipelines handle vertex layouts, shader, and render states.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Pipeline {
     /// The ID of the underlying pipeline resource.
     id: u32,
@@ -93,7 +93,7 @@ pub struct Pipeline {
 ///
 /// Passes manage render passes and actions on render targets,
 /// like clear or MSAA resolve operations.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Pass {
     /// The ID of the underlying pass resource.
     id: u32,
