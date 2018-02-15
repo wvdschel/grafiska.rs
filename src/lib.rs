@@ -133,7 +133,7 @@ pub const CUBEFACE_NUM: usize = 6;
 ///
 /// ```no_run
 /// # use grafiska::*;
-/// let grfx = State::new(Config::default());
+/// let grfx = Context::new(Config::default());
 /// if grfx.query_feature(Feature::Instancing) {
 ///     // ...
 /// }
@@ -1257,7 +1257,7 @@ pub struct PassDesc {
 }
 
 /// Internal state of a grafiska context.
-pub struct State {
+pub struct Context {
     buffer_pool: pool::Pool<backend::Buffer>,
     image_pool: pool::Pool<backend::Image>,
     shader_pool: pool::Pool<backend::Shader>,
@@ -1268,13 +1268,13 @@ pub struct State {
     current_pipeline: Option<Pipeline>,
 }
 
-impl State {
+impl Context {
     /// Initialize the Grafiska library.
     ///
     /// This must be performed after creating a window and a 3D API
     /// context/device.
     pub fn new(desc: Config) -> Self {
-        State {
+        Context {
             buffer_pool: pool::Pool::<backend::Buffer>::new(desc.buffer_pool_size),
             image_pool: pool::Pool::<backend::Image>::new(desc.image_pool_size),
             shader_pool: pool::Pool::<backend::Shader>::new(desc.shader_pool_size),
@@ -1560,7 +1560,7 @@ impl State {
     }
 }
 
-impl Drop for State {
+impl Drop for Context {
     /// Shutdown the Grafiska library at the end of your program.
     fn drop(&mut self) {
         self.shutdown()
