@@ -1286,6 +1286,7 @@ impl State {
         }
     }
 
+    /// Shutdown the Grafiska library.
     pub fn shutdown(&mut self) {
         unimplemented!()
     }
