@@ -1273,6 +1273,8 @@ pub struct Context {
     frame_index: u32,
     current_pass: Option<Pass>,
     current_pipeline: Option<Pipeline>,
+    pass_valid: bool,
+    next_draw_valid: bool,
     backend: backend::Backend,
 }
 
@@ -1291,6 +1293,8 @@ impl Context {
             frame_index: 1,
             current_pass: None,
             current_pipeline: None,
+            pass_valid: false,
+            next_draw_valid: false,
             backend: backend::Backend::default(),
         }
     }
@@ -1401,7 +1405,9 @@ impl Context {
         height: u32,
         origin_top_left: bool,
     ) {
-        unimplemented!();
+        if self.pass_valid {
+            self.backend.apply_viewport(x, y, width, height, origin_top_left);
+        }
     }
 
     /// Set a new scissor rectangle.
@@ -1415,7 +1421,9 @@ impl Context {
         height: u32,
         origin_top_left: bool,
     ) {
-        unimplemented!();
+        if self.pass_valid {
+           self.backend.apply_scissor_rect(x, y, width, height, origin_top_left);
+        }
     }
 
     /// Update the resource bindings for the next draw call.
@@ -1438,7 +1446,11 @@ impl Context {
         data: *const os::raw::c_void,
         num_bytes: u32,
     ) {
-        unimplemented!();
+        assert!(ub_index < MAX_SHADERSTAGE_UBS as u32);
+        assert!(!data.is_null() && (num_bytes > 0));
+        if self.pass_valid && self.next_draw_valid {
+            self.backend.apply_uniform_block(stage, ub_index, data, num_bytes);
+        }
     }
 
     /// Kick off a draw call.
@@ -1446,7 +1458,9 @@ impl Context {
     /// This uses the resource bindings that were supplied to `apply_draw_state()`
     /// as well as uniform blocks supplied via `apply_uniform_block()`.
     pub fn draw(&mut self, base_element: u32, num_elements: u32, num_instances: u32) {
-        unimplemented!();
+        if self.pass_valid && self.next_draw_valid {
+            self.backend.draw(base_element, num_elements, num_instances);
+        }
     }
 
     /// Finish the current rendering pass.
@@ -1454,12 +1468,18 @@ impl Context {
     /// If the render target is an MSAA render target, then an MSAA resolve will
     /// occur here.
     pub fn end_pass(&mut self) {
-        unimplemented!();
+        if self.pass_valid {
+            self.backend.end_pass();
+            self.current_pass = None;
+            self.current_pipeline = None;
+            self.pass_valid = false;
+        }
     }
 
     /// Finish rendering the current frame.
     pub fn commit(&mut self) {
-        unimplemented!();
+        self.backend.commit();
+        self.frame_index += 1;
     }
 
     /// Allocate, without initialization, a `Buffer` resource handle.

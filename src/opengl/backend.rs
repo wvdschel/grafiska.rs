@@ -1,6 +1,9 @@
 use opengl::gleam::gl::types::{GLenum, GLint, GLuint};
 use opengl::*;
 use std::collections::HashSet;
+use std::os;
+
+use {Feature, ShaderStage};
 
 #[derive(Default)]
 pub struct Backend {
@@ -19,12 +22,56 @@ pub struct Backend {
 }
 
 impl Backend {
-    pub fn query_feature(&self, feature: ::Feature) -> bool {
+    pub fn query_feature(&self, feature: Feature) -> bool {
         unimplemented!()
     }
 
     pub fn reset_state_cache(&mut self) {
         unimplemented!()
+    }
+
+    pub fn apply_viewport(
+        &mut self,
+        x: u32,
+        y: u32,
+        width: u32,
+        height: u32,
+        origin_top_left: bool,
+    ) {
+        unimplemented!();
+    }
+
+    pub fn apply_scissor_rect(
+        &mut self,
+        x: u32,
+        y: u32,
+        width: u32,
+        height: u32,
+        origin_top_left: bool,
+    ) {
+        unimplemented!();
+    }
+
+    pub fn apply_uniform_block(
+        &mut self,
+        stage: ShaderStage,
+        ub_index: u32,
+        data: *const os::raw::c_void,
+        num_bytes: u32,
+    ) {
+        unimplemented!();
+    }
+
+    pub fn draw(&mut self, base_element: u32, num_elements: u32, num_instances: u32) {
+        unimplemented!();
+    }
+
+    pub fn end_pass(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn commit(&mut self) {
+        unimplemented!();
     }
 }
 
