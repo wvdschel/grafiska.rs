@@ -1265,11 +1265,11 @@ pub struct PassDesc {
 
 /// Internal state of a grafiska context.
 pub struct Context {
-    buffer_pool: pool::Pool<backend::Buffer>,
-    image_pool: pool::Pool<backend::Image>,
-    shader_pool: pool::Pool<backend::Shader>,
-    pipeline_pool: pool::Pool<backend::Pipeline>,
-    pass_pool: pool::Pool<backend::Pass>,
+    buffer_pool: pool::Pool<backend::BufferResource>,
+    image_pool: pool::Pool<backend::ImageResource>,
+    shader_pool: pool::Pool<backend::ShaderResource>,
+    pipeline_pool: pool::Pool<backend::PipelineResource>,
+    pass_pool: pool::Pool<backend::PassResource>,
     frame_index: u32,
     current_pass: Option<Pass>,
     current_pipeline: Option<Pipeline>,
@@ -1285,11 +1285,11 @@ impl Context {
     /// context/device.
     pub fn new(desc: Config) -> Self {
         Context {
-            buffer_pool: pool::Pool::<backend::Buffer>::new(desc.buffer_pool_size),
-            image_pool: pool::Pool::<backend::Image>::new(desc.image_pool_size),
-            shader_pool: pool::Pool::<backend::Shader>::new(desc.shader_pool_size),
-            pipeline_pool: pool::Pool::<backend::Pipeline>::new(desc.pipeline_pool_size),
-            pass_pool: pool::Pool::<backend::Pass>::new(desc.pass_pool_size),
+            buffer_pool: pool::Pool::<backend::BufferResource>::new(desc.buffer_pool_size),
+            image_pool: pool::Pool::<backend::ImageResource>::new(desc.image_pool_size),
+            shader_pool: pool::Pool::<backend::ShaderResource>::new(desc.shader_pool_size),
+            pipeline_pool: pool::Pool::<backend::PipelineResource>::new(desc.pipeline_pool_size),
+            pass_pool: pool::Pool::<backend::PassResource>::new(desc.pass_pool_size),
             frame_index: 1,
             current_pass: None,
             current_pipeline: None,

@@ -14,7 +14,7 @@ pub use self::translations::*;
 use opengl::gleam::gl::types::{GLenum, GLint, GLuint};
 
 /// GL backend buffer resource.
-pub struct Buffer {
+pub struct BufferResource {
     slot: ::pool::Slot,
     size: usize,
     buffer_type: ::BufferType, // Renamed from sokol field 'type' because type is a keyword.
@@ -26,9 +26,9 @@ pub struct Buffer {
     ext_buffers: bool,
 }
 
-impl Default for Buffer {
+impl Default for BufferResource {
     fn default() -> Self {
-        Buffer {
+        BufferResource {
             slot: ::pool::Slot::default(),
             size: 0,
             buffer_type: ::BufferType::default(), // Renamed from sokol field 'type' because type is a keyword.
@@ -42,7 +42,7 @@ impl Default for Buffer {
 }
 
 /// GL backend image resource
-pub struct Image {
+pub struct ImageResource {
     slot: ::pool::Slot,
     image_type: ::ImageType,
     render_target: bool,
@@ -69,11 +69,11 @@ pub struct Image {
     ext_textures: bool,
 }
 
-impl Default for Image {
+impl Default for ImageResource {
     fn default() -> Self {
         let mut gl_tex = Vec::<GLuint>::with_capacity(::NUM_INFLIGHT_FRAMES);
         gl_tex.resize(::NUM_INFLIGHT_FRAMES, 0);
-        Image {
+        ImageResource {
             slot: ::pool::Slot::default(),
             image_type: ::ImageType::default(),
             render_target: false,
@@ -124,31 +124,31 @@ impl Default for UniformBlock {
 
 pub struct ShaderStage {
     uniform_blocks: Vec<UniformBlock>,
-    images: Vec<Image>,
+    images: Vec<ImageResource>,
 }
 
 impl Default for ShaderStage {
     fn default() -> Self {
         ShaderStage {
             uniform_blocks: Vec::<UniformBlock>::with_capacity(::MAX_SHADERSTAGE_UBS),
-            images: Vec::<Image>::with_capacity(::MAX_SHADERSTAGE_IMAGES),
+            images: Vec::<ImageResource>::with_capacity(::MAX_SHADERSTAGE_IMAGES),
         }
     }
 }
 
-pub struct Shader {
+pub struct ShaderResource {
     slot: ::pool::Slot,
     gl_prog: GLuint,
     stage: Vec<ShaderStage>,
 }
 
-impl Default for Shader {
+impl Default for ShaderResource {
     fn default() -> Self {
         let mut stage = Vec::<ShaderStage>::with_capacity(::NUM_INFLIGHT_FRAMES);
         for i in 0..::NUM_INFLIGHT_FRAMES {
             stage.push(ShaderStage::default());
         }
-        Shader {
+        ShaderResource {
             slot: ::pool::Slot::default(),
             gl_prog: 0,
             stage: stage,
@@ -180,9 +180,9 @@ impl Default for GlAttr {
     }
 }
 
-pub struct Pipeline {
+pub struct PipelineResource {
     slot: ::pool::Slot,
-    shader: Shader, // TODO why was this a pointer?
+    shader: ShaderResource, // TODO why was this a pointer?
     shader_id: ::Shader,
     primitive_type: ::PrimitiveType,
     index_type: ::IndexType,
@@ -197,13 +197,13 @@ pub struct Pipeline {
     rast: ::RasterizerState,
 }
 
-impl Default for Pipeline {
+impl Default for PipelineResource {
     fn default() -> Self {
         let mut stage = Vec::<GLuint>::with_capacity(::NUM_INFLIGHT_FRAMES);
         stage.resize(::NUM_SHADER_STAGES, 0);
-        Pipeline {
+        PipelineResource {
             slot: ::pool::Slot::default(),
-            shader: Shader::default(), // TODO why was this a pointer?
+            shader: ShaderResource::default(), // TODO why was this a pointer?
             shader_id: ::Shader::default(),
             primitive_type: ::PrimitiveType::default(),
             index_type: ::IndexType::UInt16,
@@ -222,23 +222,23 @@ impl Default for Pipeline {
 
 #[derive(Default)]
 pub struct Attachment {
-    image: Image, // TODO why was this a pointer
+    image: ImageResource, // TODO why was this a pointer
     image_id: ::Image,
     mip_level: usize, // TODO was an int, does this need to be signed?
     slice: usize,     // TODO was an int, does this need to be signed?
     gl_msaa_resolve_buffer: GLuint,
 }
 
-pub struct Pass {
+pub struct PassResource {
     slot: ::pool::Slot,
     gl_fb: GLuint,
     color_atts: Vec<Attachment>,
     ds_att: Attachment,
 }
 
-impl Default for Pass {
+impl Default for PassResource {
     fn default() -> Self {
-        Pass {
+        PassResource {
             slot: ::pool::Slot::default(),
             gl_fb: 0,
             color_atts: Vec::<Attachment>::with_capacity(::MAX_COLOR_ATTACHMENTS),

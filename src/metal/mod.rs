@@ -14,7 +14,7 @@ mod translations;
 pub use self::translations::*;
 
 #[derive(Debug, Default)]
-pub struct Buffer {
+pub struct BufferResource {
     slot: ::pool::Slot,
     size: usize,
     buffer_type: ::BufferType, // Renamed from sokol field 'type' because type is a keyword.
@@ -26,7 +26,7 @@ pub struct Buffer {
 }
 
 #[derive(Debug, Default)]
-pub struct Image {
+pub struct ImageResource {
     slot: ::pool::Slot,
     image_type: ::ImageType,
     render_target: bool,
@@ -73,15 +73,15 @@ pub struct ShaderStage {
 }
 
 #[derive(Debug, Default)]
-pub struct Shader {
+pub struct ShaderResource {
     slot: ::pool::Slot,
     stage: [ShaderStage; ::NUM_SHADER_STAGES],
 }
 
 #[derive(Debug)]
-pub struct Pipeline {
+pub struct PipelineResource {
     slot: ::pool::Slot,
-    shader: Shader, // TODO why was this a pointer?
+    shader: ShaderResource, // TODO why was this a pointer?
     shader_id: ::Shader,
     vertex_layout_valid: [bool; ::MAX_SHADERSTAGE_BUFFERS],
     color_attachment_count: usize,
@@ -103,11 +103,11 @@ pub struct Pipeline {
     mtl_dss: u32,
 }
 
-impl Default for Pipeline {
+impl Default for PipelineResource {
     fn default() -> Self {
-        Pipeline {
+        PipelineResource {
             slot: ::pool::Slot::default(),
-            shader: Shader::default(),
+            shader: ShaderResource::default(),
             shader_id: ::Shader::default(),
             vertex_layout_valid: Default::default(),
             color_attachment_count: 0,
@@ -133,14 +133,14 @@ impl Default for Pipeline {
 
 #[derive(Debug, Default)]
 pub struct Attachment {
-    image: Image,
+    image: ImageResource,
     image_id: ::Image,
     mip_level: u32,
     slice: u32,
 }
 
 #[derive(Debug, Default)]
-pub struct Pass {
+pub struct PassResource {
     slot: ::pool::Slot,
     num_color_atts: u32,
     color_atts: [Attachment; ::MAX_COLOR_ATTACHMENTS],

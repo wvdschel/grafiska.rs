@@ -11,7 +11,7 @@ pub struct Backend {
     default_framebuffer: GLuint,
     cur_pass_width: usize,
     cur_pass_height: usize,
-    curr_pass: Pass, // TODO why was this a pointer?
+    curr_pass: PassResource, // TODO why was this a pointer?
     cur_pass_id: ::Pass,
     cache: ContextCache,
     features: HashSet<::Feature>,
@@ -89,7 +89,7 @@ struct ContextCache {
     cur_gl_ib: GLuint,
     cur_primitive_type: GLenum,
     cur_index_type: GLenum,
-    cur_pipeline: Pipeline, // TODO why was this a pointer?
+    cur_pipeline: PipelineResource, // TODO why was this a pointer?
     cur_pipeline_id: ::Pipeline,
 }
 
@@ -104,7 +104,7 @@ impl Default for ContextCache {
             cur_gl_ib: 0,
             cur_primitive_type: 0,
             cur_index_type: 0,
-            cur_pipeline: Pipeline::default(),
+            cur_pipeline: PipelineResource::default(),
             cur_pipeline_id: ::Pipeline::default(),
         }
     }
