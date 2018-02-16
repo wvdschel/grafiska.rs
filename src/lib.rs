@@ -36,6 +36,7 @@
 #[macro_use]
 extern crate bitflags;
 
+use std::fmt;
 use std::os;
 
 #[allow(unused_imports)]
@@ -55,6 +56,39 @@ use metal as backend;
 
 mod pool;
 
+#[allow(missing_docs)]
+pub trait ResourceHandle: Clone + Copy + fmt::Debug {
+    /// The underlying backend resource type.
+    type Resource;
+
+    /// The description of this resource at creation time.
+    type Description;
+
+    /// Wrap a resource ID in a resource handle.
+    fn with(id: u32) -> Self;
+
+    /// Create a resource object, with the given description.
+    fn make(ctx: &mut Context, desc: Self::Description) -> Option<Self> {
+        Self::alloc(ctx).and_then(|h| h.initialize(ctx, desc))
+    }
+
+    /// Allocate, without initialization, a resource handle.
+    ///
+    /// It must subsequently be initialized with [`initialize()`].
+    ///
+    /// [`initialize()`]: #method.initialize
+    fn alloc(ctx: &mut Context) -> Option<Self>;
+
+    /// Initialize an allocated resource handle.
+    fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self>;
+
+    /// Destroy a resource object.
+    fn destroy(self, ctx: &mut Context);
+
+    /// Get the underlying resource ID.
+    fn id(&self) -> u32;
+}
+
 /// A buffer resource handle.
 ///
 /// Buffers contain vertex and index data.
@@ -62,6 +96,38 @@ mod pool;
 pub struct Buffer {
     /// The ID of the underlying buffer resource.
     id: u32,
+}
+
+impl ResourceHandle for Buffer {
+    type Resource = backend::BufferResource;
+    type Description = BufferDesc;
+
+    fn with(id: u32) -> Self {
+        Buffer { id }
+    }
+
+    /// Allocate, without initialization, a `Buffer` resource handle.
+    ///
+    /// The buffer must subsequently be initialized with [`initialize()`].
+    ///
+    /// [`initialize()`]: #method.initialize
+    fn alloc(ctx: &mut Context) -> Option<Self> {
+        ctx.buffer_pool.alloc()
+    }
+
+    /// Initialize an allocated `Buffer` resource handle.
+    fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self> {
+        Some(*self)
+    }
+
+    /// Destroy a `Buffer` resource object.
+    fn destroy(self, ctx: &mut Context) {
+        ctx.buffer_pool.destroy(self, &mut ctx.backend);
+    }
+
+    fn id(&self) -> u32 {
+        self.id
+    }
 }
 
 /// An image resource handle.
@@ -73,11 +139,75 @@ pub struct Image {
     id: u32,
 }
 
+impl ResourceHandle for Image {
+    type Resource = backend::ImageResource;
+    type Description = ImageDesc;
+
+    fn with(id: u32) -> Self {
+        Image { id }
+    }
+
+    /// Allocate, without initialization, an `Image` resource handle.
+    ///
+    /// The image must subsequently be initialized with [`initialize()`].
+    ///
+    /// [`initialize()`]: #method.initialize
+    fn alloc(ctx: &mut Context) -> Option<Self> {
+        ctx.image_pool.alloc()
+    }
+
+    /// Initialize an allocated `Image` resource handle.
+    fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self> {
+        Some(*self)
+    }
+
+    /// Destroy an `Image` resource object.
+    fn destroy(self, ctx: &mut Context) {
+        ctx.image_pool.destroy(self, &mut ctx.backend);
+    }
+
+    fn id(&self) -> u32 {
+        self.id
+    }
+}
+
 /// A shader resource handle.
 #[derive(Debug, Copy, Clone, Default)]
 pub struct Shader {
     /// The ID of the underlying shader resource.
     id: u32,
+}
+
+impl ResourceHandle for Shader {
+    type Resource = backend::ShaderResource;
+    type Description = ShaderDesc;
+
+    fn with(id: u32) -> Self {
+        Shader { id }
+    }
+
+    /// Allocate, without initialization, a `Shader` resource handle.
+    ///
+    /// The shader must subsequently be initialized with [`initialize()`].
+    ///
+    /// [`initialize()`]: #method.initialize
+    fn alloc(ctx: &mut Context) -> Option<Self> {
+        ctx.shader_pool.alloc()
+    }
+
+    /// Initialize an allocated `Shader` resource handle.
+    fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self> {
+        Some(*self)
+    }
+
+    /// Destroy a `Shader` resource object.
+    fn destroy(self, ctx: &mut Context) {
+        ctx.shader_pool.destroy(self, &mut ctx.backend);
+    }
+
+    fn id(&self) -> u32 {
+        self.id
+    }
 }
 
 /// A pipeline resource handle.
@@ -89,6 +219,38 @@ pub struct Pipeline {
     id: u32,
 }
 
+impl ResourceHandle for Pipeline {
+    type Resource = backend::PipelineResource;
+    type Description = PipelineDesc;
+
+    fn with(id: u32) -> Self {
+        Pipeline { id }
+    }
+
+    /// Allocate, without initialization, a `Pipeline` resource handle.
+    ///
+    /// The pipeline must subsequently be initialized with [`initialize()`].
+    ///
+    /// [`initialize()`]: #method.initialize
+    fn alloc(ctx: &mut Context) -> Option<Self> {
+        ctx.pipeline_pool.alloc()
+    }
+
+    /// Initialize an allocated `Pipeline` resource handle.
+    fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self> {
+        Some(*self)
+    }
+
+    /// Destroy a `Pipeline` resource object.
+    fn destroy(self, ctx: &mut Context) {
+        ctx.pipeline_pool.destroy(self, &mut ctx.backend);
+    }
+
+    fn id(&self) -> u32 {
+        self.id
+    }
+}
+
 /// A pass resource handle.
 ///
 /// Passes manage render passes and actions on render targets,
@@ -97,6 +259,38 @@ pub struct Pipeline {
 pub struct Pass {
     /// The ID of the underlying pass resource.
     id: u32,
+}
+
+impl ResourceHandle for Pass {
+    type Resource = backend::PassResource;
+    type Description = PassDesc;
+
+    fn with(id: u32) -> Self {
+        Pass { id }
+    }
+
+    /// Allocate, without initialization, a `Pass` resource handle.
+    ///
+    /// The pass must subsequently be initialized with [`initialize()`].
+    ///
+    /// [`initialize()`]: #method.initialize
+    fn alloc(ctx: &mut Context) -> Option<Self> {
+        ctx.pass_pool.alloc()
+    }
+
+    /// Initialize an allocated `Pass` resource handle.
+    fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self> {
+        Some(*self)
+    }
+
+    /// Destroy a `Pass` resource object.
+    fn destroy(self, ctx: &mut Context) {
+        ctx.pass_pool.destroy(self, &mut ctx.backend);
+    }
+
+    fn id(&self) -> u32 {
+        self.id
+    }
 }
 
 #[allow(dead_code, missing_docs)]
@@ -1000,8 +1194,8 @@ pub struct BufferDesc {
 
 #[allow(missing_docs)]
 #[derive(Debug)]
-pub struct SubimageContent<'c> {
-    pub content: &'c [u8],
+pub struct SubimageContent {
+    pub content: Vec<u8>,
 }
 
 /// The content of an image by way of a 2D array of [`SubimageContent`] structs.
@@ -1012,13 +1206,13 @@ pub struct SubimageContent<'c> {
 /// [`SubimageContent`]: struct.SubimageContent.html
 #[allow(missing_docs)]
 #[derive(Debug)]
-pub struct ImageContent<'c> {
-    pub subimage: [[SubimageContent<'c>; CUBEFACE_NUM]; MAX_MIPMAPS],
+pub struct ImageContent {
+    pub subimage: [[SubimageContent; CUBEFACE_NUM]; MAX_MIPMAPS],
 }
 
 #[allow(missing_docs)]
 #[derive(Debug)]
-pub struct ImageDesc<'c> {
+pub struct ImageDesc {
     pub image_type: ImageType,
     pub render_target: bool,
     pub width: usize,
@@ -1036,7 +1230,7 @@ pub struct ImageDesc<'c> {
     pub max_anisotropy: u32,
     pub min_lod: f32,
     pub max_lod: f32,
-    pub content: ImageContent<'c>,
+    pub content: ImageContent,
     #[cfg(feature = "gl")]
     pub gl_textures: [u32; NUM_INFLIGHT_FRAMES],
     #[cfg(feature = "metal")]
@@ -1265,11 +1459,11 @@ pub struct PassDesc {
 
 /// Internal state of a grafiska context.
 pub struct Context {
-    buffer_pool: pool::Pool<backend::BufferResource>,
-    image_pool: pool::Pool<backend::ImageResource>,
-    shader_pool: pool::Pool<backend::ShaderResource>,
-    pipeline_pool: pool::Pool<backend::PipelineResource>,
-    pass_pool: pool::Pool<backend::PassResource>,
+    buffer_pool: pool::Pool<Buffer>,
+    image_pool: pool::Pool<Image>,
+    shader_pool: pool::Pool<Shader>,
+    pipeline_pool: pool::Pool<Pipeline>,
+    pass_pool: pool::Pool<Pass>,
     frame_index: u32,
     current_pass: Option<Pass>,
     current_pipeline: Option<Pipeline>,
@@ -1285,11 +1479,11 @@ impl Context {
     /// context/device.
     pub fn new(desc: Config) -> Self {
         Context {
-            buffer_pool: pool::Pool::<backend::BufferResource>::new(desc.buffer_pool_size),
-            image_pool: pool::Pool::<backend::ImageResource>::new(desc.image_pool_size),
-            shader_pool: pool::Pool::<backend::ShaderResource>::new(desc.shader_pool_size),
-            pipeline_pool: pool::Pool::<backend::PipelineResource>::new(desc.pipeline_pool_size),
-            pass_pool: pool::Pool::<backend::PassResource>::new(desc.pass_pool_size),
+            buffer_pool: pool::Pool::<Buffer>::new(desc.buffer_pool_size),
+            image_pool: pool::Pool::<Image>::new(desc.image_pool_size),
+            shader_pool: pool::Pool::<Shader>::new(desc.shader_pool_size),
+            pipeline_pool: pool::Pool::<Pipeline>::new(desc.pipeline_pool_size),
+            pass_pool: pool::Pool::<Pass>::new(desc.pass_pool_size),
             frame_index: 1,
             current_pass: None,
             current_pipeline: None,
@@ -1313,56 +1507,6 @@ impl Context {
     /// prior to using Grafiska functions again.
     pub fn reset_state_cache(&mut self) {
         self.backend.reset_state_cache();
-    }
-
-    /// Create a `Buffer` resource object.
-    pub fn make_buffer(&mut self, desc: BufferDesc) -> Buffer {
-        unimplemented!();
-    }
-
-    /// Create an `Image` resource object.
-    pub fn make_image(&mut self, desc: ImageDesc) -> Image {
-        unimplemented!();
-    }
-
-    /// Create a `Shader` resource object.
-    pub fn make_shader(&mut self, desc: ShaderDesc) -> Shader {
-        unimplemented!();
-    }
-
-    /// Create a `Pipeline` resource object.
-    pub fn make_pipeline(&mut self, desc: PipelineDesc) -> Pipeline {
-        unimplemented!();
-    }
-
-    /// Create a `Pass` resource object.
-    pub fn make_pass(&mut self, desc: PassDesc) -> Pass {
-        unimplemented!();
-    }
-
-    /// Destroy a `Buffer` resource object.
-    pub fn destroy_buffer(&mut self, buf: Buffer) {
-        unimplemented!();
-    }
-
-    /// Destroy an `Image` resource object.
-    pub fn destroy_image(&mut self, img: Image) {
-        unimplemented!();
-    }
-
-    /// Destroy a `Shader` resource object.
-    pub fn destroy_shader(&mut self, shd: Shader) {
-        unimplemented!();
-    }
-
-    /// Destroy a `Pipeline` resource object.
-    pub fn destroy_pipeline(&mut self, pip: Pipeline) {
-        unimplemented!();
-    }
-
-    /// Destroy a `Pass` resource object.
-    pub fn destroy_pass(&mut self, pass: Pass) {
-        unimplemented!();
     }
 
     /// Update the content of a buffer resource.
@@ -1480,76 +1624,6 @@ impl Context {
     pub fn commit(&mut self) {
         self.backend.commit();
         self.frame_index += 1;
-    }
-
-    /// Allocate, without initialization, a `Buffer` resource handle.
-    ///
-    /// The buffer must subsequently be initialized with [`init_buffer()`].
-    ///
-    /// [`init_buffer()`]: fn.init_buffer.html
-    pub fn alloc_buffer(&mut self) -> Buffer {
-        unimplemented!();
-    }
-
-    /// Allocate, without initialization, an `Image` resource handle.
-    ///
-    /// The image must subsequently be initialized with [`init_image()`].
-    ///
-    /// [`init_image()`]: fn.init_image.html
-    pub fn alloc_image(&mut self) -> Image {
-        unimplemented!();
-    }
-
-    /// Allocate, without initialization, a `Shader` resource handle.
-    ///
-    /// The shader must subsequently be initialized with [`init_shader()`].
-    ///
-    /// [`init_shader()`]: fn.init_shader.html
-    pub fn alloc_shader(&mut self) -> Shader {
-        unimplemented!();
-    }
-
-    /// Allocate, without initialization, a `Pipeline` resource handle.
-    ///
-    /// The pipeline must subsequently be initialized with [`init_pipeline()`].
-    ///
-    /// [`init_pipeline()`]: fn.init_pipeline.html
-    pub fn alloc_pipeline(&mut self) -> Pipeline {
-        unimplemented!();
-    }
-
-    /// Allocate, without initialization, a `Pass` resource handle.
-    ///
-    /// The pass must subsequently be initialized with [`init_pass()`].
-    ///
-    /// [`init_pass()`]: fn.init_pass.html
-    pub fn alloc_pass(&mut self) -> Pass {
-        unimplemented!();
-    }
-
-    /// Initialize an allocated `Buffer` resource handle.
-    pub fn init_buffer(&mut self, buf_id: Buffer, desc: BufferDesc) {
-        unimplemented!();
-    }
-
-    /// Initialize an allocated `Image` resource handle.
-    pub fn init_image(&mut self, img_id: Image, desc: ImageDesc) {
-        unimplemented!();
-    }
-
-    /// Initialize an allocated `Shader` resource handle.
-    pub fn init_shader(&mut self, shd_id: Shader, desc: ShaderDesc) {
-        unimplemented!();
-    }
-
-    /// Initialize an allocated `Pipeline` resource handle.
-    pub fn init_pipeline(&mut self, pip_id: Pipeline, desc: PipelineDesc) {
-        unimplemented!();
-    }
-
-    /// Initialize an allocated `Pass` resource handle.
-    pub fn init_pass(&mut self, pass_id: Pass, desc: PassDesc) {
-        unimplemented!();
     }
 
     /// Helper function for creating a `VertexAttrDesc` with a name.
