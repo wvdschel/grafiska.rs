@@ -57,7 +57,7 @@ use metal as backend;
 mod pool;
 
 #[allow(missing_docs)]
-pub trait ResourceHandle: Clone + Copy + fmt::Debug {
+pub trait ResourceHandle: fmt::Debug + Sized {
     /// The underlying backend resource type.
     type Resource;
 
