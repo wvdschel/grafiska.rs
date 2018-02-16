@@ -1177,6 +1177,12 @@ impl Default for Config {
     }
 }
 
+/// Creation parameters for [`Buffer`] objects.
+///
+/// Buffers with `Usage::Immutable` usage *must* fill the buffer
+/// `content` with initial data of exactly *size* bytes.
+///
+/// [`Buffer`]: struct.Buffer.html
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct BufferDesc {
@@ -1210,6 +1216,9 @@ pub struct ImageContent {
     pub subimage: [[SubimageContent; CUBEFACE_NUM]; MAX_MIPMAPS],
 }
 
+/// Creation parameters for [`Image`] objects.
+///
+/// [`Image`]: struct.Image.html
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct ImageDesc {
@@ -1272,6 +1281,9 @@ pub struct ShaderStageDesc {
     pub images: [ShaderImageDesc; MAX_SHADERSTAGE_IMAGES],
 }
 
+/// Creation parameters for [`Shader`] objects.
+///
+/// [`Shader`]: struct.Shader.html
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct ShaderDesc {
@@ -1408,6 +1420,9 @@ impl Default for RasterizerState {
     }
 }
 
+/// Creation parameters for [`Pipeline`] objects.
+///
+/// [`Pipeline`]: struct.Pipeline.html
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub struct PipelineDesc {
