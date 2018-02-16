@@ -1075,7 +1075,7 @@ pub struct PassAction {
 /// by the `MAX_SHADERSTAGE_BUFFERS` and `MAX_SHADERSTAGE_IMAGES`
 /// configuration constants.
 #[allow(missing_docs)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DrawState {
     /// The pipeline to be drawn.
     pub pipeline: Pipeline,
