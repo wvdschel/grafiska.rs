@@ -1,4 +1,4 @@
-use opengl::gleam::gl::types::{GLint, GLuint, GLenum};
+use opengl::gleam::gl::types::{GLenum, GLint, GLuint};
 use opengl::*;
 use std::collections::HashSet;
 
@@ -27,8 +27,6 @@ impl Backend {
         unimplemented!()
     }
 }
-
-
 
 struct CacheAttribute {
     gl_attr: GlAttr,

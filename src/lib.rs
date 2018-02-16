@@ -153,7 +153,8 @@ pub enum Feature {
     OriginBottomLeft,
     OriginTopLeft,
     MSAARenderTargets,
-    #[allow(non_camel_case_types)] PackedVertexFormat_10_2,
+    #[allow(non_camel_case_types)]
+    PackedVertexFormat_10_2,
     MultipleRenderTarget,
     ImageType3D,
     ImageTypeArray,

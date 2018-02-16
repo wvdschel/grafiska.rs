@@ -17,7 +17,7 @@ pub use self::translations::*;
 pub struct Buffer {
     slot: ::pool::Slot,
     size: usize,
-    buffer_type: ::BufferType,  // Renamed from sokol field 'type' because type is a keyword.
+    buffer_type: ::BufferType, // Renamed from sokol field 'type' because type is a keyword.
     usage: ::Usage,
     upd_frame_index: u32,
     num_slots: usize,
@@ -42,7 +42,7 @@ pub struct Image {
     wrap_u: ::Wrap,
     wrap_v: ::Wrap,
     wrap_w: ::Wrap,
-    max_anisotropy: u32,  // TODO: Or usize?
+    max_anisotropy: u32, // TODO: Or usize?
     upd_frame_index: u32,
     num_slots: usize,
     active_slot: usize,

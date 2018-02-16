@@ -11,13 +11,13 @@ mod backend;
 pub use self::backend::Backend;
 pub use self::translations::*;
 
-use opengl::gleam::gl::types::{GLint, GLuint, GLenum};
+use opengl::gleam::gl::types::{GLenum, GLint, GLuint};
 
 /// GL backend buffer resource.
 pub struct Buffer {
     slot: ::pool::Slot,
     size: usize,
-    buffer_type: ::BufferType,  // Renamed from sokol field 'type' because type is a keyword.
+    buffer_type: ::BufferType, // Renamed from sokol field 'type' because type is a keyword.
     usage: ::Usage,
     upd_frame_index: u32,
     // num_slots: usize,
@@ -31,7 +31,7 @@ impl Default for Buffer {
         Buffer {
             slot: ::pool::Slot::default(),
             size: 0,
-            buffer_type: ::BufferType::default(),  // Renamed from sokol field 'type' because type is a keyword.
+            buffer_type: ::BufferType::default(), // Renamed from sokol field 'type' because type is a keyword.
             usage: ::Usage::default(),
             upd_frame_index: 0,
             active_slot: 0,
@@ -58,7 +58,7 @@ pub struct Image {
     wrap_u: ::Wrap,
     wrap_v: ::Wrap,
     wrap_w: ::Wrap,
-    max_anisotropy: u32,  // TODO: Or usize?
+    max_anisotropy: u32, // TODO: Or usize?
     gl_target: GLenum,
     gl_depth_render_buffer: GLuint,
     gl_msaa_render_buffer: GLuint,
@@ -117,7 +117,7 @@ struct UniformBlock {
 impl Default for UniformBlock {
     fn default() -> Self {
         UniformBlock {
-            uniforms: Vec::<Uniform>::with_capacity(::MAX_UB_MEMBERS)
+            uniforms: Vec::<Uniform>::with_capacity(::MAX_UB_MEMBERS),
         }
     }
 }
@@ -157,7 +157,7 @@ impl Default for Shader {
 }
 
 struct GlAttr {
-    vb_index: i8,  // -1 if attr is not enabled
+    vb_index: i8, // -1 if attr is not enabled
     divisor: i8,  // -1 if not initialized
     stride: i8,
     size: i8,
@@ -225,7 +225,7 @@ pub struct Attachment {
     image: Image, // TODO why was this a pointer
     image_id: ::Image,
     mip_level: usize, // TODO was an int, does this need to be signed?
-    slice: usize, // TODO was an int, does this need to be signed?
+    slice: usize,     // TODO was an int, does this need to be signed?
     gl_msaa_resolve_buffer: GLuint,
 }
 
@@ -233,7 +233,7 @@ pub struct Pass {
     slot: ::pool::Slot,
     gl_fb: GLuint,
     color_atts: Vec<Attachment>,
-    ds_att: Attachment
+    ds_att: Attachment,
 }
 
 impl Default for Pass {
