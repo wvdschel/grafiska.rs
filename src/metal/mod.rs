@@ -13,40 +13,45 @@ pub use self::backend::Backend;
 mod translations;
 pub use self::translations::*;
 
+use {BufferType, Filter, Image, ImageType, IndexType, PixelFormat, Shader, Usage, Wrap};
+use {MAX_COLOR_ATTACHMENTS, MAX_SHADERSTAGE_BUFFERS, MAX_SHADERSTAGE_IMAGES, MAX_SHADERSTAGE_UBS};
+use {NUM_INFLIGHT_FRAMES, NUM_SHADER_STAGES};
+use pool;
+
 #[derive(Debug, Default)]
 pub struct BufferResource {
-    slot: ::pool::Slot,
+    slot: pool::Slot,
     size: usize,
-    buffer_type: ::BufferType, // Renamed from sokol field 'type' because type is a keyword.
-    usage: ::Usage,
+    buffer_type: BufferType,
+    usage: Usage,
     upd_frame_index: u32,
     num_slots: usize,
     active_slot: usize,
-    mtl_buf: [u32; ::NUM_INFLIGHT_FRAMES],
+    mtl_buf: [u32; NUM_INFLIGHT_FRAMES],
 }
 
 #[derive(Debug, Default)]
 pub struct ImageResource {
-    slot: ::pool::Slot,
-    image_type: ::ImageType,
+    slot: pool::Slot,
+    image_type: ImageType,
     render_target: bool,
     width: usize,
     height: usize,
     depth: usize,
     num_mipmaps: usize,
-    usage: ::Usage,
-    pixel_format: ::PixelFormat,
+    usage: Usage,
+    pixel_format: PixelFormat,
     sample_count: usize,
-    min_filter: ::Filter,
-    mag_filter: ::Filter,
-    wrap_u: ::Wrap,
-    wrap_v: ::Wrap,
-    wrap_w: ::Wrap,
+    min_filter: Filter,
+    mag_filter: Filter,
+    wrap_u: Wrap,
+    wrap_v: Wrap,
+    wrap_w: Wrap,
     max_anisotropy: u32, // TODO: Or usize?
     upd_frame_index: u32,
     num_slots: usize,
     active_slot: usize,
-    mtl_tex: [u32; ::NUM_INFLIGHT_FRAMES],
+    mtl_tex: [u32; NUM_INFLIGHT_FRAMES],
     mtl_depth_tex: u32,
     mtl_msaa_tex: u32,
     mtl_sampler_state: u32,
@@ -59,40 +64,40 @@ pub struct UniformBlock {
 
 #[derive(Debug, Default)]
 pub struct ShaderImage {
-    image_type: ::ImageType,
+    image_type: ImageType,
 }
 
 #[derive(Debug, Default)]
 pub struct ShaderStage {
     num_uniform_blocks: usize,
     num_images: usize,
-    uniform_blocks: [UniformBlock; ::MAX_SHADERSTAGE_UBS],
-    images: [ShaderImage; ::MAX_SHADERSTAGE_IMAGES],
+    uniform_blocks: [UniformBlock; MAX_SHADERSTAGE_UBS],
+    images: [ShaderImage; MAX_SHADERSTAGE_IMAGES],
     mtl_lib: u32,
     mt_func: u32,
 }
 
 #[derive(Debug, Default)]
 pub struct ShaderResource {
-    slot: ::pool::Slot,
-    stage: [ShaderStage; ::NUM_SHADER_STAGES],
+    slot: pool::Slot,
+    stage: [ShaderStage; NUM_SHADER_STAGES],
 }
 
 #[derive(Debug)]
 pub struct PipelineResource {
-    slot: ::pool::Slot,
+    slot: pool::Slot,
     shader: ShaderResource, // TODO why was this a pointer?
-    shader_id: ::Shader,
-    vertex_layout_valid: [bool; ::MAX_SHADERSTAGE_BUFFERS],
+    shader_id: Shader,
+    vertex_layout_valid: [bool; MAX_SHADERSTAGE_BUFFERS],
     color_attachment_count: usize,
-    color_format: ::PixelFormat,
-    depth_format: ::PixelFormat,
+    color_format: PixelFormat,
+    depth_format: PixelFormat,
     sample_count: usize,
     depth_bias: f32,
     depth_bias_slope_scale: f32,
     depth_bias_clamp: f32,
     mtl_prim_type: MTLPrimitiveType,
-    index_type: ::IndexType,
+    index_type: IndexType,
     mtl_index_size: u32,
     mtl_index_type: MTLIndexType,
     mtl_cull_mode: MTLCullMode,
@@ -106,19 +111,19 @@ pub struct PipelineResource {
 impl Default for PipelineResource {
     fn default() -> Self {
         PipelineResource {
-            slot: ::pool::Slot::default(),
+            slot: pool::Slot::default(),
             shader: ShaderResource::default(),
-            shader_id: ::Shader::default(),
+            shader_id: Shader::default(),
             vertex_layout_valid: Default::default(),
             color_attachment_count: 0,
-            color_format: ::PixelFormat::default(),
-            depth_format: ::PixelFormat::default(),
+            color_format: PixelFormat::default(),
+            depth_format: PixelFormat::default(),
             sample_count: 0,
             depth_bias: 0.0f32,
             depth_bias_slope_scale: 0.0f32,
             depth_bias_clamp: 0.0f32,
             mtl_prim_type: MTLPrimitiveType::Point,
-            index_type: ::IndexType::UInt16,
+            index_type: IndexType::UInt16,
             mtl_index_size: 0,
             mtl_index_type: MTLIndexType::UInt16,
             mtl_cull_mode: MTLCullMode::None,
@@ -134,15 +139,15 @@ impl Default for PipelineResource {
 #[derive(Debug, Default)]
 pub struct Attachment {
     image: ImageResource,
-    image_id: ::Image,
+    image_id: Image,
     mip_level: u32,
     slice: u32,
 }
 
 #[derive(Debug, Default)]
 pub struct PassResource {
-    slot: ::pool::Slot,
+    slot: pool::Slot,
     num_color_atts: u32,
-    color_atts: [Attachment; ::MAX_COLOR_ATTACHMENTS],
+    color_atts: [Attachment; MAX_COLOR_ATTACHMENTS],
     ds_att: Attachment,
 }
