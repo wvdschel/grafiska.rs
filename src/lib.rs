@@ -54,6 +54,9 @@ use opengl as backend;
 #[cfg(feature = "metal")]
 use metal as backend;
 
+#[cfg(feature = "metal")]
+extern crate metal_rs as metal_sys;
+
 mod pool;
 
 #[allow(missing_docs)]

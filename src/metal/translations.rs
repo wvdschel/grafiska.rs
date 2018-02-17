@@ -4,7 +4,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use super::metal_sys::*;
+use metal_sys::*;
 use super::super::*;
 
 impl Action {
