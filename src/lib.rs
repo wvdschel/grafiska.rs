@@ -1568,7 +1568,8 @@ impl Context {
         origin_top_left: bool,
     ) {
         if self.pass_valid {
-            self.backend.apply_viewport(x, y, width, height, origin_top_left);
+            self.backend
+                .apply_viewport(x, y, width, height, origin_top_left);
         }
     }
 
@@ -1584,7 +1585,8 @@ impl Context {
         origin_top_left: bool,
     ) {
         if self.pass_valid {
-           self.backend.apply_scissor_rect(x, y, width, height, origin_top_left);
+            self.backend
+                .apply_scissor_rect(x, y, width, height, origin_top_left);
         }
     }
 
@@ -1611,7 +1613,8 @@ impl Context {
         assert!(ub_index < MAX_SHADERSTAGE_UBS as u32);
         assert!(!data.is_null() && (num_bytes > 0));
         if self.pass_valid && self.next_draw_valid {
-            self.backend.apply_uniform_block(stage, ub_index, data, num_bytes);
+            self.backend
+                .apply_uniform_block(stage, ub_index, data, num_bytes);
         }
     }
 
