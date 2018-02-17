@@ -86,7 +86,7 @@ pub struct ShaderResource {
 #[derive(Debug)]
 pub struct PipelineResource {
     slot: pool::Slot,
-    shader: ShaderResource, // TODO why was this a pointer?
+    shader: ShaderResource, // FIXME: Should be a reference, not something owned.
     shader_id: Shader,
     vertex_layout_valid: [bool; MAX_SHADERSTAGE_BUFFERS],
     color_attachment_count: usize,
@@ -138,7 +138,7 @@ impl Default for PipelineResource {
 
 #[derive(Debug, Default)]
 pub struct Attachment {
-    image: ImageResource,
+    image: ImageResource, // FIXME: Should be a reference, not something owned.
     image_id: Image,
     mip_level: u32,
     slice: u32,
