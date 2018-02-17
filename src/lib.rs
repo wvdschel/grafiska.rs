@@ -82,8 +82,8 @@ pub trait ResourceHandle: fmt::Debug + Sized {
     /// Initialize an allocated resource handle.
     fn initialize(&self, ctx: &mut Context, desc: Self::Description) -> Option<Self>;
 
-    /// Destroy a resource object.
-    fn destroy(self, ctx: &mut Context);
+    /// Discard a resource object.
+    fn discard(self, ctx: &mut Context);
 
     /// Get the underlying resource ID.
     fn id(&self) -> u32;
@@ -120,9 +120,9 @@ impl ResourceHandle for Buffer {
         Some(*self)
     }
 
-    /// Destroy a `Buffer` resource object.
-    fn destroy(self, ctx: &mut Context) {
-        ctx.buffer_pool.destroy(self, &mut ctx.backend);
+    /// Discard a `Buffer` resource object.
+    fn discard(self, ctx: &mut Context) {
+        ctx.buffer_pool.discard(self, &mut ctx.backend);
     }
 
     fn id(&self) -> u32 {
@@ -161,9 +161,9 @@ impl ResourceHandle for Image {
         Some(*self)
     }
 
-    /// Destroy an `Image` resource object.
-    fn destroy(self, ctx: &mut Context) {
-        ctx.image_pool.destroy(self, &mut ctx.backend);
+    /// Discard an `Image` resource object.
+    fn discard(self, ctx: &mut Context) {
+        ctx.image_pool.discard(self, &mut ctx.backend);
     }
 
     fn id(&self) -> u32 {
@@ -200,9 +200,9 @@ impl ResourceHandle for Shader {
         Some(*self)
     }
 
-    /// Destroy a `Shader` resource object.
-    fn destroy(self, ctx: &mut Context) {
-        ctx.shader_pool.destroy(self, &mut ctx.backend);
+    /// Discard a `Shader` resource object.
+    fn discard(self, ctx: &mut Context) {
+        ctx.shader_pool.discard(self, &mut ctx.backend);
     }
 
     fn id(&self) -> u32 {
@@ -241,9 +241,9 @@ impl ResourceHandle for Pipeline {
         Some(*self)
     }
 
-    /// Destroy a `Pipeline` resource object.
-    fn destroy(self, ctx: &mut Context) {
-        ctx.pipeline_pool.destroy(self, &mut ctx.backend);
+    /// Discard a `Pipeline` resource object.
+    fn discard(self, ctx: &mut Context) {
+        ctx.pipeline_pool.discard(self, &mut ctx.backend);
     }
 
     fn id(&self) -> u32 {
@@ -283,9 +283,9 @@ impl ResourceHandle for Pass {
         Some(*self)
     }
 
-    /// Destroy a `Pass` resource object.
-    fn destroy(self, ctx: &mut Context) {
-        ctx.pass_pool.destroy(self, &mut ctx.backend);
+    /// Discard a `Pass` resource object.
+    fn discard(self, ctx: &mut Context) {
+        ctx.pass_pool.discard(self, &mut ctx.backend);
     }
 
     fn id(&self) -> u32 {

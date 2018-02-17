@@ -41,11 +41,11 @@ impl<R: ResourceHandle + Sized> Pool<R> {
         self.free_queue.pop_front().map(R::with)
     }
 
-    pub fn destroy(&mut self, handle: R, backend: &mut ::backend::Backend) {
+    pub fn discard(&mut self, handle: R, backend: &mut ::backend::Backend) {
         // Make sure that this isn't a double free.
         debug_assert_eq!(self.free_queue.contains(&handle.id()), false);
         if let Some(ref mut r) = self.resources[handle.id() as usize] {
-            // backend.destroy(r);
+            // backend.discard(r);
             self.free_queue.push_back(handle.id());
         }
     }
