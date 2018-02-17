@@ -1110,7 +1110,7 @@ pub struct Config {
     pub gl_force_gles2: bool,
     #[cfg(feature = "metal")]
     /// A pointer to the `MTLDevice` object.
-    pub mtl_device: *const os::raw::c_void,
+    pub mtl_device: metal_sys::Device,
     #[cfg(feature = "metal")]
     /// A C callback function to obtain the `MTLRenderPassDescriptor` for the
     /// current frame when rendering to the default framebuffer. Will be called in
@@ -1159,7 +1159,7 @@ impl Default for Config {
             #[cfg(feature = "gl")]
             gl_force_gles2: false,
             #[cfg(feature = "metal")]
-            mtl_device: ptr::null::<os::raw::c_void>(),
+            mtl_device: metal_sys::Device::system_default(),
             #[cfg(feature = "metal")]
             mtl_renderpass_descriptor_cb: None,
             #[cfg(feature = "metal")]
