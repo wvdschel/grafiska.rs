@@ -42,6 +42,8 @@ impl<R: ResourceHandle + Sized> Pool<R> {
     }
 
     pub fn destroy(&mut self, handle: R, backend: &mut ::backend::Backend) {
+        // Make sure that this isn't a double free.
+        debug_assert_eq!(self.free_queue.contains(&handle.id()), false);
         if let Some(ref mut r) = self.resources[handle.id() as usize] {
             // backend.destroy(r);
             self.free_queue.push_back(handle.id());
