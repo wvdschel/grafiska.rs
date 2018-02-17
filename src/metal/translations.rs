@@ -13,9 +13,8 @@ impl Action {
     /// This is only present when the `metal` feature is enabled.
     pub fn mtl_load_action(self) -> MTLLoadAction {
         match self {
-            Action::Clear => MTLLoadAction::Clear,
+            Action::Clear | Action::DontCare => MTLLoadAction::Clear,
             Action::Load => MTLLoadAction::Load,
-            Action::DontCare => MTLLoadAction::Clear,
         }
     }
 }
