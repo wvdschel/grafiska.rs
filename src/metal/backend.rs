@@ -6,12 +6,15 @@
 
 use std::os;
 
-use {Feature, ShaderStage};
+use {Config, Feature, ShaderStage};
 
-#[derive(Default)]
 pub struct Backend {}
 
 impl Backend {
+    pub fn new(desc: Config) -> Self {
+        Backend {}
+    }
+
     pub fn query_feature(&self, feature: Feature) -> bool {
         match feature {
             Feature::Instancing

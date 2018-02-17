@@ -9,7 +9,7 @@ use opengl::*;
 use std::collections::HashSet;
 use std::os;
 
-use {Feature, ShaderStage};
+use {Config, Feature, ShaderStage};
 
 #[derive(Default)]
 pub struct Backend {
@@ -28,6 +28,10 @@ pub struct Backend {
 }
 
 impl Backend {
+    pub fn new(_desc: Config) -> Self {
+        Backend::default()
+    }
+
     pub fn query_feature(&self, feature: Feature) -> bool {
         unimplemented!()
     }

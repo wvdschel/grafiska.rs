@@ -1504,7 +1504,7 @@ impl Context {
             current_pipeline: None,
             pass_valid: false,
             next_draw_valid: false,
-            backend: backend::Backend::default(),
+            backend: backend::Backend::new(desc),
         }
     }
 
