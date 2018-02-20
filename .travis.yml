@@ -3,3 +3,7 @@ cache: cargo
 script:
   - cargo build --verbose --features=gles2
   - cargo test --verbose --features=gles2
+  - cargo build --verbose --features=gles3
+  - cargo test --verbose --features=gles3
+  - cargo build --verbose --features=glcore33
+  - cargo test --verbose --features=glcore33
