@@ -1108,6 +1108,11 @@ pub struct Config {
     /// when compiled for GLES3. This is useful for falling back to traditional
     /// WebGL if a browser doesn't support a WebGL2 context.
     pub gl_force_gles2: bool,
+    #[cfg(feature = "gl")]
+    /// Used to look up OpenGL functions for a grafiska OpenGL context.
+    /// Commonly wraps around glutin::GlWindow::get_proc_address or a similar
+    /// method.
+    pub load_gl_symbol: opengl::GlFunctionLookup,
     #[cfg(feature = "metal")]
     /// A pointer to the `MTLDevice` object.
     pub mtl_device: metal_sys::Device,
@@ -1158,6 +1163,8 @@ impl Default for Config {
             pass_pool_size: 16,
             #[cfg(feature = "gl")]
             gl_force_gles2: false,
+            #[cfg(feature = "gl")]
+            load_gl_symbol: opengl::GlFunctionLookup::new(|sym| std::ptr::null::<os::raw::c_void> as *const os::raw::c_void),
             #[cfg(feature = "metal")]
             mtl_device: metal_sys::Device::system_default(),
             #[cfg(feature = "metal")]

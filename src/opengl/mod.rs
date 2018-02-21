@@ -11,6 +11,8 @@ mod backend;
 pub use self::backend::Backend;
 pub use self::translations::*;
 
+use os;
+use std;
 use opengl::gleam::gl::types::{GLenum, GLint, GLuint};
 
 /// GL backend buffer resource.
@@ -244,5 +246,27 @@ impl Default for PassResource {
             color_atts: Vec::<Attachment>::with_capacity(::MAX_COLOR_ATTACHMENTS),
             ds_att: Attachment::default(),
         }
+    }
+}
+
+pub struct GlFunctionLookup {
+    lookup_fn: fn(&str) -> *const os::raw::c_void,
+}
+
+impl GlFunctionLookup {
+    pub fn new(lookup_fn: fn(&str) -> *const os::raw::c_void) -> Self {
+        GlFunctionLookup {
+            lookup_fn: lookup_fn
+        }
+    }
+    
+    pub fn lookup(&self, symbol_name: &str) -> *const os::raw::c_void {
+        (self.lookup_fn)(symbol_name)
+    }
+}
+
+impl std::fmt::Debug for GlFunctionLookup {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "OpenGL function loader")
     }
 }
