@@ -15,13 +15,6 @@ use {Config, Feature, ShaderStage};
 const GL_TEXTURE_MAX_ANISOTROPY_EXT : GLuint = 0x84FE;
 const GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT : GLuint = 0x84FF;
 
-#[derive(PartialEq, Eq)]
-enum GLProfile {
-    GLES2,
-    GLES3,
-    GLCORE33,
-}
-
 pub struct Backend {
     in_pass: bool,
     force_gles2: bool,
@@ -37,12 +30,6 @@ pub struct Backend {
     #[cfg(not(feature = "gles2"))]
     vao: GLuint,
     gl: std::rc::Rc<Gl>,
-    /// Sokol uses the C preprocessor and conditional compilation to isolate code snippets which
-    /// are specific for a single OpenGL profile.
-    /// Rust doesn't allow statements to be conditionally compiled, only definitions (fn & let)
-    /// So to avoid having to split all parts which depend on the OpenGL profile into separate
-    /// functions, we can check the OpenGL profile at runtime using this field.
-    gl_profile: GLProfile,   
 }
 
 impl Backend {
@@ -76,12 +63,6 @@ impl Backend {
             #[cfg(not(feature = "gles2"))]
             vao: gl::INVALID_VALUE,
             gl: gl,
-            #[cfg(feature = "gles2")]
-            gl_profile: GLProfile::GLES2,
-            #[cfg(feature = "gles3")]
-            gl_profile: GLProfile::GLES3,
-            #[cfg(feature = "glcore33")]
-            gl_profile: GLProfile::GLCORE33,
         };
 
         res.reset_state_cache();
@@ -234,7 +215,7 @@ impl Backend {
         self.gl.enable(gl::DITHER);
         self.gl.disable(gl::POLYGON_OFFSET_FILL);
         
-        if self.gl_profile == GLProfile::GLCORE33 {
+        if cfg!(feature = "glcore33") {
             self.gl.enable(gl::MULTISAMPLE);
             self.gl.enable(gl::PROGRAM_POINT_SIZE);
         }
