@@ -1164,7 +1164,9 @@ impl Default for Config {
             #[cfg(feature = "gl")]
             gl_force_gles2: false,
             #[cfg(feature = "gl")]
-            load_gl_symbol: opengl::GlFunctionLookup::new(|sym| std::ptr::null::<os::raw::c_void> as *const os::raw::c_void),
+            load_gl_symbol: opengl::GlFunctionLookup::new(|sym| {
+                std::ptr::null::<os::raw::c_void> as *const os::raw::c_void
+            }),
             #[cfg(feature = "metal")]
             mtl_device: metal_sys::Device::system_default(),
             #[cfg(feature = "metal")]

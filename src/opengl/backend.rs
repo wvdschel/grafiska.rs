@@ -12,8 +12,8 @@ use std::os;
 
 use {Config, Feature, ShaderStage};
 
-const GL_TEXTURE_MAX_ANISOTROPY_EXT : GLuint = 0x84FE;
-const GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT : GLuint = 0x84FF;
+const GL_TEXTURE_MAX_ANISOTROPY_EXT: GLuint = 0x84FE;
+const GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT: GLuint = 0x84FF;
 
 pub struct Backend {
     in_pass: bool,
@@ -36,9 +36,7 @@ impl Backend {
     #[allow(unsafe_code)]
     pub fn new(desc: Config) -> Self {
         #[cfg(any(feature = "gles2", feature = "gles3"))]
-        let gl = unsafe {
-            gl::GlesFns::load_with(|symbol| desc.load_gl_symbol.lookup(symbol))
-        };
+        let gl = unsafe { gl::GlesFns::load_with(|symbol| desc.load_gl_symbol.lookup(symbol)) };
         #[cfg(not(any(feature = "gles2", feature = "gles3")))]
         let gl = unsafe {
             if desc.gl_force_gles2 {
@@ -47,7 +45,7 @@ impl Backend {
                 gl::GlFns::load_with(|symbol| desc.load_gl_symbol.lookup(symbol))
             }
         };
-        
+
         let mut res = Backend {
             in_pass: false,
             force_gles2: desc.gl_force_gles2,
@@ -67,7 +65,7 @@ impl Backend {
 
         res.reset_state_cache();
         res.init_gl_features();
-        
+
         res
     }
 
@@ -76,29 +74,43 @@ impl Backend {
     #[cfg(feature = "gles2")]
     fn init_gl_features(&mut self) {
         self.features.insert(Feature::OriginBottomLeft);
-        
+
         let extensions = self.gl.get_string(gl::EXTENSIONS);
         for extension in extensions.split_whitespace() {
             match extension {
-                "_instanced_arrays" => { self.features.insert(Feature::Instancing); }
-                "_texture_float" => { self.features.insert(Feature::TextureFloat); }
-                "_texture_half_float" => { self.features.insert(Feature::TextureHalfFloat); }
-                "_texture_filter_anisotropic" =>  { self.ext_anisotropic = true; }
-                "_texture_compression_s3tc" | "_compressed_texture_s3tc" | "texture_compression_dxt1"
-                    => { self.features.insert(Feature::TextureCompressionDXT); }
-                "_texture_compression_pvrtc" | "_compressed_texture_pvrtc"
-                    => { self.features.insert(Feature::TextureCompressionPVRTC); }
-                "_compressed_texture_atc" => { self.features.insert(Feature::TextureCompressionATC); }
+                "_instanced_arrays" => {
+                    self.features.insert(Feature::Instancing);
+                }
+                "_texture_float" => {
+                    self.features.insert(Feature::TextureFloat);
+                }
+                "_texture_half_float" => {
+                    self.features.insert(Feature::TextureHalfFloat);
+                }
+                "_texture_filter_anisotropic" => {
+                    self.ext_anisotropic = true;
+                }
+                "_texture_compression_s3tc"
+                | "_compressed_texture_s3tc"
+                | "texture_compression_dxt1" => {
+                    self.features.insert(Feature::TextureCompressionDXT);
+                }
+                "_texture_compression_pvrtc" | "_compressed_texture_pvrtc" => {
+                    self.features.insert(Feature::TextureCompressionPVRTC);
+                }
+                "_compressed_texture_atc" => {
+                    self.features.insert(Feature::TextureCompressionATC);
+                }
                 &_ => {}
             }
         }
-        
+
         self.max_anisotropy = 1;
         if self.ext_anisotropic {
             self.max_anisotropy = self.gl.get_integer_v(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
         }
     }
-    
+
     #[cfg(feature = "gles3")]
     fn init_gl_features(&mut self) {
         self.features.insert(Feature::OriginBottomLeft);
@@ -110,26 +122,34 @@ impl Backend {
         self.features.insert(Feature::MultipleRenderTarget);
         self.features.insert(Feature::ImageType3D);
         self.features.insert(Feature::ImageTypeArray);
-        
+
         let extensions = self.gl.get_string(gl::EXTENSIONS);
         for extension in extensions.split_whitespace() {
             match extension {
-                "_texture_filter_anisotropic" =>  { self.ext_anisotropic = true; }
-                "_texture_compression_s3tc" | "_compressed_texture_s3tc" | "texture_compression_dxt1"
-                    => { self.features.insert(Feature::TextureCompressionDXT); }
-                "_texture_compression_pvrtc" | "_compressed_texture_pvrtc"
-                    => { self.features.insert(Feature::TextureCompressionPVRTC); }
-                "_compressed_texture_atc" => { self.features.insert(Feature::TextureCompressionATC); }
+                "_texture_filter_anisotropic" => {
+                    self.ext_anisotropic = true;
+                }
+                "_texture_compression_s3tc"
+                | "_compressed_texture_s3tc"
+                | "texture_compression_dxt1" => {
+                    self.features.insert(Feature::TextureCompressionDXT);
+                }
+                "_texture_compression_pvrtc" | "_compressed_texture_pvrtc" => {
+                    self.features.insert(Feature::TextureCompressionPVRTC);
+                }
+                "_compressed_texture_atc" => {
+                    self.features.insert(Feature::TextureCompressionATC);
+                }
                 &_ => {}
             }
         }
-        
+
         self.max_anisotropy = 1;
         if self.ext_anisotropic {
             self.max_anisotropy = self.gl.get_integer_v(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
         }
     }
-    
+
     #[cfg(feature = "glcore33")]
     fn init_gl_features(&mut self) {
         self.features.insert(Feature::OriginBottomLeft);
@@ -145,7 +165,8 @@ impl Backend {
         let num_ext = self.gl.get_integer_v(gl::NUM_EXTENSIONS);
         for i in 0..num_ext {
             let extension = self.gl.get_string_i(gl::EXTENSIONS, i as GLuint);
-            if extension == "_texture_compression_s3tc" { // TODO 
+            if extension == "_texture_compression_s3tc" {
+                // TODO
                 self.features.insert(Feature::TextureCompressionDXT);
             } else if extension == "_texture_filter_anisotropic" {
                 self.ext_anisotropic = true; // TODO make this a feature?
@@ -173,7 +194,7 @@ impl Backend {
     fn reset_vao(&mut self) {}
 
     /* Public interface methods */
-    
+
     pub fn query_feature(&self, feature: Feature) -> bool {
         unimplemented!()
     }
@@ -181,7 +202,7 @@ impl Backend {
     pub fn reset_state_cache(&mut self) {
         self.reset_vao();
         self.cache = ContextCache::default();
-        
+
         self.gl.bind_buffer(gl::ARRAY_BUFFER, 0);
         self.gl.bind_buffer(gl::ELEMENT_ARRAY_BUFFER, 0);
         for i in 0..::MAX_VERTEX_ATTRIBUTES {
@@ -196,10 +217,11 @@ impl Backend {
         self.gl.stencil_func(gl::ALWAYS, 0, 0);
         self.gl.stencil_op(gl::KEEP, gl::KEEP, gl::KEEP);
         self.gl.stencil_mask(0);
-        
+
         /* blend state */
         self.gl.disable(gl::BLEND);
-        self.gl.blend_func_separate(gl::ONE, gl::ZERO, gl::ONE, gl::ZERO);
+        self.gl
+            .blend_func_separate(gl::ONE, gl::ZERO, gl::ONE, gl::ZERO);
         self.gl.blend_equation_separate(gl::FUNC_ADD, gl::FUNC_ADD);
         self.gl.color_mask(true, true, true, true);
         self.gl.blend_color(0.0, 0.0, 0.0, 0.0);
@@ -214,7 +236,7 @@ impl Backend {
         self.gl.disable(gl::SAMPLE_ALPHA_TO_COVERAGE);
         self.gl.enable(gl::DITHER);
         self.gl.disable(gl::POLYGON_OFFSET_FILL);
-        
+
         if cfg!(feature = "glcore33") {
             self.gl.enable(gl::MULTISAMPLE);
             self.gl.enable(gl::PROGRAM_POINT_SIZE);
@@ -300,4 +322,3 @@ impl Default for ContextCache {
         }
     }
 }
-

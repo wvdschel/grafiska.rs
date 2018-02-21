@@ -256,10 +256,10 @@ pub struct GlFunctionLookup {
 impl GlFunctionLookup {
     pub fn new(lookup_fn: fn(&str) -> *const os::raw::c_void) -> Self {
         GlFunctionLookup {
-            lookup_fn: lookup_fn
+            lookup_fn: lookup_fn,
         }
     }
-    
+
     pub fn lookup(&self, symbol_name: &str) -> *const os::raw::c_void {
         (self.lookup_fn)(symbol_name)
     }
