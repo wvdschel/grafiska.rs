@@ -350,8 +350,7 @@ pub enum Feature {
     OriginBottomLeft,
     OriginTopLeft,
     MSAARenderTargets,
-    #[allow(non_camel_case_types)]
-    PackedVertexFormat_10_2,
+    #[allow(non_camel_case_types)] PackedVertexFormat_10_2,
     MultipleRenderTarget,
     ImageType3D,
     ImageTypeArray,
@@ -1202,12 +1201,9 @@ pub struct BufferDesc {
     pub buffer_type: BufferType,
     pub usage: Usage,
     pub content: Vec<u8>,
-    #[cfg(feature = "gl")]
-    pub gl_buffers: [u32; NUM_INFLIGHT_FRAMES],
-    #[cfg(feature = "metal")]
-    pub metal_buffers: [*const os::raw::c_void; NUM_INFLIGHT_FRAMES],
-    #[cfg(feature = "d3d11")]
-    pub d3d11_buffers: *const os::raw::c_void,
+    #[cfg(feature = "gl")] pub gl_buffers: [u32; NUM_INFLIGHT_FRAMES],
+    #[cfg(feature = "metal")] pub metal_buffers: [*const os::raw::c_void; NUM_INFLIGHT_FRAMES],
+    #[cfg(feature = "d3d11")] pub d3d11_buffers: *const os::raw::c_void,
 }
 
 #[allow(missing_docs)]
@@ -1252,12 +1248,9 @@ pub struct ImageDesc {
     pub min_lod: f32,
     pub max_lod: f32,
     pub content: ImageContent,
-    #[cfg(feature = "gl")]
-    pub gl_textures: [u32; NUM_INFLIGHT_FRAMES],
-    #[cfg(feature = "metal")]
-    pub mtl_textures: [*const os::raw::c_void; NUM_INFLIGHT_FRAMES],
-    #[cfg(feature = "d3d11")]
-    pub d3d11_texture: *const os::raw::c_void,
+    #[cfg(feature = "gl")] pub gl_textures: [u32; NUM_INFLIGHT_FRAMES],
+    #[cfg(feature = "metal")] pub mtl_textures: [*const os::raw::c_void; NUM_INFLIGHT_FRAMES],
+    #[cfg(feature = "d3d11")] pub d3d11_texture: *const os::raw::c_void,
 }
 
 #[allow(missing_docs)]

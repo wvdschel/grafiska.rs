@@ -27,8 +27,7 @@ pub struct Backend {
     features: HashSet<::Feature>,
     ext_anisotropic: bool,
     max_anisotropy: GLint,
-    #[cfg(not(feature = "gles2"))]
-    vao: GLuint,
+    #[cfg(not(feature = "gles2"))] vao: GLuint,
     gl: std::rc::Rc<Gl>,
 }
 
@@ -166,7 +165,6 @@ impl Backend {
         for i in 0..num_ext {
             let extension = self.gl.get_string_i(gl::EXTENSIONS, i as GLuint);
             if extension == "_texture_compression_s3tc" {
-                // TODO
                 self.features.insert(Feature::TextureCompressionDXT);
             } else if extension == "_texture_filter_anisotropic" {
                 self.ext_anisotropic = true; // TODO make this a feature?
@@ -196,7 +194,7 @@ impl Backend {
     /* Public interface methods */
 
     pub fn query_feature(&self, feature: Feature) -> bool {
-        unimplemented!()
+        self.features.contains(&feature)
     }
 
     pub fn reset_state_cache(&mut self) {
@@ -251,7 +249,14 @@ impl Backend {
         height: u32,
         origin_top_left: bool,
     ) {
-        unimplemented!();
+        assert!(self.in_pass);
+        let y = if origin_top_left {
+            self.cur_pass_height as u32 - (y + height)
+        } else {
+            y
+        };
+        self.gl
+            .viewport(x as i32, y as i32, width as i32, height as i32);
     }
 
     pub fn apply_scissor_rect(
@@ -262,7 +267,14 @@ impl Backend {
         height: u32,
         origin_top_left: bool,
     ) {
-        unimplemented!();
+        assert!(self.in_pass);
+        let y = if origin_top_left {
+            self.cur_pass_height as u32 - (y + height)
+        } else {
+            y
+        };
+        self.gl
+            .scissor(x as i32, y as i32, width as i32, height as i32);
     }
 
     pub fn apply_uniform_block(
@@ -276,7 +288,46 @@ impl Backend {
     }
 
     pub fn draw(&mut self, base_element: u32, num_elements: u32, num_instances: u32) {
-        unimplemented!();
+        let i_type: GLenum = self.cache.cur_index_type;
+        let p_type: GLenum = self.cache.cur_primitive_type;
+
+        // OpenGL expects these to be signed integers.
+        let num_elements = num_elements as GLint;
+        let num_instances = num_instances as GLint;
+
+        if 0 != i_type {
+            /* indexed rendering */
+            let i_size = if i_type == gl::UNSIGNED_SHORT { 2 } else { 4 };
+            let indices = base_element * i_size;
+            if num_instances == 1 {
+                self.gl.draw_elements(p_type, num_elements, i_type, indices);
+            } else {
+                if self.query_feature(Feature::Instancing) {
+                    self.gl.draw_elements_instanced(
+                        p_type,
+                        num_elements,
+                        i_type,
+                        indices,
+                        num_instances,
+                    );
+                }
+            }
+        } else {
+            /* non-indexed rendering */
+            if num_instances == 1 {
+                self.gl
+                    .draw_arrays(p_type, base_element as GLint, num_elements);
+            } else {
+                if self.query_feature(Feature::Instancing) {
+                    self.gl.draw_arrays_instanced(
+                        p_type,
+                        base_element as GLint,
+                        num_elements,
+                        num_instances,
+                    );
+                }
+            }
+        }
     }
 
     pub fn end_pass(&mut self) {
