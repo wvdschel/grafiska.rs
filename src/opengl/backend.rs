@@ -8,9 +8,8 @@ use opengl::gleam::gl::types::{GLenum, GLint, GLuint};
 use opengl::gleam::gl::{self, Gl};
 use opengl::*;
 use std::collections::HashSet;
-use std::os;
 
-use {Config, Feature, ShaderStage};
+use {Config, Feature, ShaderStage, Uniform};
 
 const GL_TEXTURE_MAX_ANISOTROPY_EXT: GLuint = 0x84FE;
 const GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT: GLuint = 0x84FF;
@@ -277,13 +276,14 @@ impl Backend {
             .scissor(x as i32, y as i32, width as i32, height as i32);
     }
 
-    pub fn apply_uniform_block(
+    pub fn apply_uniform_block<T>(
         &mut self,
         stage: ShaderStage,
         ub_index: u32,
-        data: *const os::raw::c_void,
-        num_bytes: u32,
-    ) {
+        data: Vec<T>)
+    where
+        T: Uniform,
+    {
         unimplemented!();
     }
 

@@ -833,6 +833,26 @@ impl UniformType {
     }
 }
 
+/// Marker trait for uniforms.
+pub trait Uniform {}
+
+/// A single floating point uniform.
+pub type Float = f32;
+/// A uniform containing two floating point numbers.
+pub type Float2 = [Float; 2];
+/// A uniform containing three floating point numbers.
+pub type Float3 = [Float; 3];
+/// A uniform containing four floating point numbers.
+pub type Float4 = [Float; 4];
+/// A uniform built from a 4x4 matrix of floating point numbers.
+pub type Mat4 = [Float4; 4];
+impl Uniform for Float {}
+impl Uniform for Float2 {}
+impl Uniform for Float3 {}
+impl Uniform for Float4 {}
+impl Uniform for Mat4 {}
+
+
 /// The face-culling mode.
 ///
 /// This is used in the [`PipelineDesc`] `rasterizer`'s
@@ -1605,18 +1625,18 @@ impl Context {
     }
 
     /// Update shader uniform data.
-    pub fn apply_uniform_block(
+    pub fn apply_uniform_block<T>(
         &mut self,
         stage: ShaderStage,
         ub_index: u32,
-        data: *const os::raw::c_void,
-        num_bytes: u32,
-    ) {
+        data: Vec<T>)
+    where
+        T: Uniform,
+    {
         assert!(ub_index < MAX_SHADERSTAGE_UBS as u32);
-        assert!(!data.is_null() && (num_bytes > 0));
+        assert!(data.len() > 0);
         if self.pass_valid && self.next_draw_valid {
-            self.backend
-                .apply_uniform_block(stage, ub_index, data, num_bytes);
+            self.backend.apply_uniform_block(stage, ub_index, data);
         }
     }
 
